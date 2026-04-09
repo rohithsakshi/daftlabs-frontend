@@ -73,7 +73,7 @@ export default function Contact() {
 
             <div className="bg-white border border-[#d2d2d7] shadow-sm rounded-2xl p-6">
               <p className="text-sm font-semibold mb-2" style={{ fontFamily: "var(--font-display)" }}>Office Hours</p>
-              <p className="text-xs text-[#6e6e73]">Monday – Friday</p>
+              <p className="text-xs text-[#6e6e73]">Monday – Saturday</p>
               <p className="text-xs text-[#6e6e73]">9:00 AM – 6:00 PM IST</p>
               <div className="flex items-center gap-2 mt-3">
                 <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />

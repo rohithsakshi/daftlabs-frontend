@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="800" height="800">
+  <!-- Outer Swoosh -->
+  <path
+    d="M 110 30 A 70 70 0 0 0 40 100 A 70 70 0 0 0 110 170"
+    fill="none"
+    stroke="#0071e3"
+    stroke-width="15"
+    stroke-linecap="round"
+  />
+  
+  <!-- Inner Swoosh -->
+  <path
+    d="M 90 50 A 50 50 0 0 0 50 100 A 50 50 0 0 0 90 150"
+    fill="none"
+    stroke="#0071e3"
+    stroke-width="8"
+    stroke-linecap="round"
+  />
+
+  <!-- DL TEXT -->
+  <text
+    x="85"
+    y="118"
+    font-family="-apple-system, BlinkMacSystemFont, 'Inter', sans-serif"
+    font-weight="900"
+    font-size="64"
+    fill="#1d1d1f"
+    letter-spacing="-4"
+  >
+    DL
+  </text>
+</svg>

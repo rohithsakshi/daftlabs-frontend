@@ -60,7 +60,7 @@ const services: Service[] = [
     title: "Product Engineering & MVP",
     short: "From idea to live product — fast, focused, and fundable.",
     detail:
-      "We help founders and product teams go from concept to market with speed and precision. Our MVP process is structured to validate assumptions early, eliminate waste, and ship something users actually want — without burning your runway.",
+      "We help founders and product teams go from concept to market with speed and precision. Our MVP process is structured to validate assumptions early, eliminate waste, and ship something users actually want.",
     bullets: [
       "Rapid MVP development in 6–12 weeks",
       "Design sprints & product discovery",
@@ -112,7 +112,7 @@ const services: Service[] = [
     title: "Maintenance & Support",
     short: "Post-launch peace of mind. Your tech, always running, always evolving.",
     detail:
-      "Great software requires ongoing care. We offer structured maintenance plans that cover bug resolution, security patching, feature iterations, and proactive monitoring — so you can focus on growing your business, not babysitting your stack.",
+      "Great software requires ongoing care. We offer structured maintenance plans that cover bug resolution, security patching, feature iterations, and proactive monitoring — so you can focus on growing your business, not worrying about your stack.",
     bullets: [
       "SLA-backed bug fixes & incident response",
       "Security patches & dependency updates",
@@ -149,12 +149,11 @@ export default function Services() {
           </h2>
           <p className="text-[#6e6e73] max-w-xl mx-auto text-base">
             Eight focused disciplines. One team that owns the outcome.
-            Click any service to go deeper.
           </p>
         </motion.div>
 
         {/* Grid */}
-        <motion.div 
+        <motion.div
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
           variants={{
@@ -165,6 +164,7 @@ export default function Services() {
           {services.map((svc) => (
             <motion.button
               key={svc.title}
+              title="Click to go deeper"
               variants={{
                 hidden: { opacity: 0, y: 30 },
                 visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } }

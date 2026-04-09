@@ -93,7 +93,7 @@ export default function Hero() {
           className="mt-24 grid grid-cols-3 gap-8 max-w-lg mx-auto border-t border-[#d2d2d7] pt-12"
         >
           {[
-            { num: "50+", label: "Projects Delivered" },
+            { num: "4", label: "Active Projects" },
             { num: "8", label: "Core Services" },
             { num: "100%", label: "Client Satisfaction" },
           ].map((stat) => (
