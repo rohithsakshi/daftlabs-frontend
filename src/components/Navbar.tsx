@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Zap } from "lucide-react";
+import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
+import { Menu, X } from "lucide-react";
 
 const navLinks = [
   { label: "About", href: "#about" },
@@ -13,30 +13,60 @@ const navLinks = [
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { scrollY } = useScroll();
 
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    const previous = scrollY.getPrevious() ?? 0;
+    if (latest > 100 && latest > previous) {
+      setHidden(true);
+    } else {
+      setHidden(false);
+    }
+    setScrolled(latest > 50);
+  });
+
+  const mobileMenuVariants = {
+    hidden: { opacity: 0, y: "-100%" },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 300,
+        damping: 30,
+        staggerChildren: 0.1,
+        delayChildren: 0.1,
+      },
+    },
+    exit: { 
+      opacity: 0, 
+      y: "-100%", 
+      transition: { duration: 0.2 } 
+    }
+  };
+
+  const mobileItemVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: { opacity: 1, y: 0 },
+  };
 
   return (
     <>
       <motion.header
         initial={{ y: -80, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        animate={{ y: hidden ? -100 : 0, opacity: 1 }}
+        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+        className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-500 ${
           scrolled
-            ? "bg-white/80 border border-[#d2d2d7] shadow-sm backdrop-blur-xl backdrop-blur-md bg-white/80 backdrop-blur-xl border-b border-[#e5e5ea] shadow-sm border-b border-[#d2d2d7] shadow-[0_4px_30px_rgba(0,0,0,0.8)]"
-            : "bg-transparent"
+            ? "bg-white/80 border-b border-[#d2d2d7] shadow-sm backdrop-blur-xl"
+            : "bg-transparent border-b border-transparent"
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           {/* Logo */}
           <a href="#" className="flex items-center gap-2 group">
-            {/* New Native SVG Logo */}
             <svg viewBox="0 0 200 200" className="w-10 h-10 group-hover:scale-110 transition-transform duration-300">
               <path
                 d="M 110 30 A 70 70 0 0 0 40 100 A 70 70 0 0 0 110 170"
@@ -65,7 +95,7 @@ export default function Navbar() {
               </text>
             </svg>
             <span
-              className="text-[1.35rem] font-black tracking-tighter ml-1"
+              className="text-[1.35rem] font-black tracking-tighter ml-1 group-hover:text-[#0071e3] transition-colors duration-300"
               style={{ fontFamily: "'Inter', -apple-system, sans-serif" }}
             >
               DAFT{" "}
@@ -79,9 +109,10 @@ export default function Navbar() {
               <a
                 key={link.label}
                 href={link.href}
-                className="orange-link text-sm font-medium text-[#6e6e73] transition-colors duration-200"
+                className="relative group text-sm font-medium text-[#6e6e73] hover:text-[#1d1d1f] transition-colors duration-200"
               >
                 {link.label}
+                <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-[#0071e3] transition-all duration-300 group-hover:w-full" />
               </a>
             ))}
           </nav>
@@ -90,13 +121,13 @@ export default function Navbar() {
           <div className="hidden md:flex items-center gap-4">
             <a
               href="#contact"
-              className="btn-secondary px-5 py-2.5 text-sm"
+              className="btn-secondary px-5 py-2.5 text-sm group"
             >
               Login
             </a>
             <a
               href="#contact"
-              className="btn-primary px-5 py-2.5 text-sm"
+              className="btn-primary px-5 py-2.5 text-sm group"
               style={{ fontFamily: "var(--font-display)" }}
             >
               Get Started
@@ -117,37 +148,37 @@ export default function Navbar() {
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -16 }}
-            transition={{ duration: 0.25 }}
-            className="fixed top-16 left-0 right-0 z-40 bg-white/80 border border-[#d2d2d7] shadow-sm backdrop-blur-xl border-b border-[#d2d2d7] px-6 py-6 flex flex-col gap-5"
+            variants={mobileMenuVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className="fixed top-16 left-0 right-0 bottom-0 z-40 bg-white/95 backdrop-blur-xl px-6 py-8 flex flex-col gap-6"
           >
             {navLinks.map((link) => (
-              <a
+              <motion.a
+                variants={mobileItemVariants}
                 key={link.label}
                 href={link.href}
                 onClick={() => setMobileOpen(false)}
-                className="text-base font-medium text-[#6e6e73] hover:text-[#0071e3] transition-colors"
+                className="text-2xl font-bold text-[#1d1d1f] hover:text-[#0071e3] transition-colors border-b border-[#e5e5ea] pb-4"
               >
                 {link.label}
-              </a>
+              </motion.a>
             ))}
-            <hr className="border-transparent" />
-            <div className="flex gap-3 mt-2">
+            <motion.div variants={mobileItemVariants} className="flex flex-col gap-3 mt-4">
               <a
                 href="#contact"
-                className="btn-secondary flex-1 py-3 text-sm"
+                className="btn-secondary w-full py-4 text-center text-base"
               >
                 Login
               </a>
               <a
                 href="#contact"
-                className="btn-primary flex-1 py-3 text-sm"
+                className="btn-primary w-full py-4 text-center text-base"
               >
                 Get Started
               </a>
-            </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

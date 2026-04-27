@@ -6,6 +6,7 @@ import {
   Bot, Cloud, Building2, Rocket, Code2, Lightbulb,
   TestTube2, Headphones, X, CheckCircle2, ChevronRight
 } from "lucide-react";
+import TiltCard from "./TiltCard";
 
 type Service = {
   icon: React.ReactNode;
@@ -127,6 +128,16 @@ export default function Services() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
+  const cardVariants = {
+    hidden: { opacity: 0, scale: 0.8, rotate: -5 },
+    visible: { 
+      opacity: 1, 
+      scale: 1, 
+      rotate: 0, 
+      transition: { type: "spring", stiffness: 100, damping: 15 } 
+    }
+  };
+
   return (
     <section id="services" className="relative py-28 overflow-hidden">
       <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-[#0071e3] opacity-[0.03] blur-[120px] pointer-events-none" />
@@ -157,35 +168,42 @@ export default function Services() {
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
           variants={{
-            visible: { transition: { staggerChildren: 0.1 } }
+            visible: { transition: { staggerChildren: 0.08 } }
           }}
-          className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6"
+          className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-fr"
         >
           {services.map((svc) => (
-            <motion.button
-              key={svc.title}
-              title="Click to go deeper"
-              variants={{
-                hidden: { opacity: 0, y: 30 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } }
-              }}
-              onClick={() => setSelected(svc)}
-              className="bg-white border border-[#d2d2d7] shadow-sm rounded-2xl p-7 text-left group hover:bg-[#f5f5f7] transition-all duration-500 cursor-pointer hover:scale-[1.02] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,113,227,0.1)] hover:border-[rgba(0,113,227,0.1)]"
-            >
-              <div className="w-12 h-12 rounded-xl bg-white/80 border border-[#d2d2d7] shadow-sm backdrop-blur-xl border border-[rgba(0,113,227,0.1)] flex items-center justify-center text-[#0071e3] mb-5 group-hover:bg-[rgba(0,113,227,0.1)] group-hover:scale-110 transition-all duration-300">
-                {svc.icon}
-              </div>
-              <h3
-                className="font-bold text-[15px] mb-2 group-hover:text-[#0071e3] transition-colors duration-200"
-                style={{ fontFamily: "var(--font-display)" }}
-              >
-                {svc.title}
-              </h3>
-              <p className="text-[#6e6e73] text-xs leading-relaxed mb-4">{svc.short}</p>
-              <div className="flex items-center gap-1.5 text-[#0071e3] text-xs font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-200 group-hover:translate-x-1">
-                Learn more <ChevronRight size={14} />
-              </div>
-            </motion.button>
+            <motion.div key={svc.title} variants={cardVariants} className="h-full">
+              <TiltCard className="h-full block">
+                <button
+                  title="Click to go deeper"
+                  onClick={() => setSelected(svc)}
+                  className="bg-white border border-[#d2d2d7] shadow-sm rounded-2xl p-7 text-left group hover:bg-[#f5f5f7] transition-all duration-500 cursor-pointer h-full w-full flex flex-col items-start"
+                >
+                  <motion.div 
+                    variants={{
+                      rest: { borderRadius: "12px", scale: 1 },
+                      hover: { borderRadius: "20px", scale: 1.1, backgroundColor: "rgba(0,113,227,0.1)" }
+                    }}
+                    initial="rest"
+                    whileHover="hover"
+                    className="w-12 h-12 bg-white/80 border border-[#d2d2d7] shadow-sm backdrop-blur-xl border border-[rgba(0,113,227,0.1)] flex items-center justify-center text-[#0071e3] mb-5 transition-colors duration-300"
+                  >
+                    {svc.icon}
+                  </motion.div>
+                  <h3
+                    className="font-bold text-[15px] mb-2 group-hover:text-[#0071e3] transition-colors duration-200"
+                    style={{ fontFamily: "var(--font-display)" }}
+                  >
+                    {svc.title}
+                  </h3>
+                  <p className="text-[#6e6e73] text-xs leading-relaxed mb-4 flex-grow">{svc.short}</p>
+                  <div className="flex items-center gap-1.5 text-[#0071e3] text-xs font-semibold opacity-100 md:opacity-0 group-hover:opacity-100 transition-all duration-200 md:group-hover:translate-x-1">
+                    Learn more <ChevronRight size={14} />
+                  </div>
+                </button>
+              </TiltCard>
+            </motion.div>
           ))}
         </motion.div>
       </div>
@@ -246,10 +264,10 @@ export default function Services() {
                 <a
                   href="#contact"
                   onClick={() => setSelected(null)}
-                  className="mt-10 btn-primary w-full py-3.5"
+                  className="mt-10 btn-primary w-full py-3.5 block text-center"
                   style={{ fontFamily: "var(--font-display)" }}
                 >
-                  Discuss This Service <ChevronRight size={16} />
+                  Discuss This Service <ChevronRight size={16} className="inline ml-1" />
                 </a>
               </div>
             </motion.div>

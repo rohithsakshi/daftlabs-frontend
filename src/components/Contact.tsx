@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { Mail, MapPin, Send, CheckCircle2 } from "lucide-react";
+import confetti from "canvas-confetti";
 
 export default function Contact() {
   const ref = useRef(null);
@@ -12,8 +13,31 @@ export default function Contact() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate submission
-    setTimeout(() => setSubmitted(true), 400);
+    setSubmitted(true);
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ['#0071e3', '#ffffff', '#2563eb']
+    });
+  };
+
+  const infoVariants = {
+    hidden: { opacity: 0, scale: 0.9 },
+    visible: { 
+      opacity: 1, 
+      scale: 1, 
+      transition: { type: "spring", stiffness: 100, damping: 15 } 
+    }
+  };
+
+  const formInputVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { duration: 0.5, ease: "easeOut" } 
+    }
   };
 
   return (
@@ -44,12 +68,14 @@ export default function Contact() {
         <div className="grid md:grid-cols-5 gap-8 items-start">
           {/* Info */}
           <motion.div
-            initial={{ opacity: 0, x: -24 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.1 }}
+            initial="hidden"
+            animate={inView ? "visible" : "hidden"}
+            variants={{
+              visible: { transition: { staggerChildren: 0.15 } }
+            }}
             className="md:col-span-2 flex flex-col gap-6"
           >
-            <div className="bg-white border border-[#d2d2d7] shadow-sm rounded-2xl p-6">
+            <motion.div variants={infoVariants} className="bg-white border border-[#d2d2d7] shadow-sm rounded-2xl p-6">
               <div className="w-10 h-10 rounded-xl bg-[rgba(0,113,227,0.1)] border border-[rgba(0,113,227,0.1)] flex items-center justify-center text-[#0071e3] mb-4">
                 <Mail size={18} />
               </div>
@@ -60,26 +86,35 @@ export default function Contact() {
               >
                 daftlabs.reply@gmail.com
               </a>
-            </div>
+            </motion.div>
 
-            <div className="bg-white border border-[#d2d2d7] shadow-sm rounded-2xl p-6">
+            <motion.div variants={infoVariants} className="bg-white border border-[#d2d2d7] shadow-sm rounded-2xl p-6">
               <div className="w-10 h-10 rounded-xl bg-[rgba(0,113,227,0.1)] border border-[rgba(0,113,227,0.1)] flex items-center justify-center text-[#0071e3] mb-4">
-                <MapPin size={18} />
+                <motion.div
+                  animate={{ y: [0, -5, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <MapPin size={18} />
+                </motion.div>
               </div>
               <p className="text-xs text-[#6e6e73] mb-1 font-medium uppercase tracking-wider">Location</p>
               <p className="text-sm text-[#1d1d1f] font-medium">Coimbatore, India</p>
               <p className="text-xs text-[#6e6e73] mt-1">Available for remote engagements globally</p>
-            </div>
+            </motion.div>
 
-            <div className="bg-white border border-[#d2d2d7] shadow-sm rounded-2xl p-6">
+            <motion.div variants={infoVariants} className="bg-white border border-[#d2d2d7] shadow-sm rounded-2xl p-6">
               <p className="text-sm font-semibold mb-2" style={{ fontFamily: "var(--font-display)" }}>Office Hours</p>
               <p className="text-xs text-[#6e6e73]">Monday – Saturday</p>
               <p className="text-xs text-[#6e6e73]">9:00 AM – 6:00 PM IST</p>
               <div className="flex items-center gap-2 mt-3">
-                <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+                <motion.div 
+                  animate={{ scale: [1, 1.3, 1], opacity: [1, 0.6, 1] }} 
+                  transition={{ repeat: Infinity, duration: 2 }} 
+                  className="w-2 h-2 rounded-full bg-green-400" 
+                />
                 <span className="text-xs text-green-400">Currently accepting new projects</span>
               </div>
-            </div>
+            </motion.div>
           </motion.div>
 
           {/* Form */}
@@ -91,8 +126,14 @@ export default function Contact() {
           >
             <div className="bg-white border border-[#d2d2d7] shadow-sm rounded-2xl p-8">
               {!submitted ? (
-                <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-                  <div>
+                <motion.form 
+                  onSubmit={handleSubmit} 
+                  className="flex flex-col gap-5"
+                  initial="hidden"
+                  animate={inView ? "visible" : "hidden"}
+                  variants={{ visible: { transition: { staggerChildren: 0.15 } } }}
+                >
+                  <motion.div variants={formInputVariants}>
                     <label className="text-xs text-[#6e6e73] mb-2 block uppercase tracking-wider">
                       Your Name
                     </label>
@@ -102,10 +143,10 @@ export default function Contact() {
                       value={form.name}
                       onChange={(e) => setForm({ ...form, name: e.target.value })}
                       placeholder="Jane Doe"
-                      className="w-full bg-[#f5f5f7] border border-[#d2d2d7] focus:border-[rgba(0,113,227,0.1)] rounded-xl px-4 py-3 text-sm text-[#1d1d1f] placeholder-white/20 outline-none transition-colors duration-200"
+                      className="w-full bg-[#f5f5f7] border border-[#d2d2d7] focus:border-[rgba(0,113,227,0.1)] rounded-xl px-4 py-3 text-sm text-[#1d1d1f] placeholder-black/20 outline-none transition-colors duration-200"
                     />
-                  </div>
-                  <div>
+                  </motion.div>
+                  <motion.div variants={formInputVariants}>
                     <label className="text-xs text-[#6e6e73] mb-2 block uppercase tracking-wider">
                       Email Address
                     </label>
@@ -115,10 +156,10 @@ export default function Contact() {
                       value={form.email}
                       onChange={(e) => setForm({ ...form, email: e.target.value })}
                       placeholder="jane@yourcompany.com"
-                      className="w-full bg-[#f5f5f7] border border-[#d2d2d7] focus:border-[rgba(0,113,227,0.1)] rounded-xl px-4 py-3 text-sm text-[#1d1d1f] placeholder-white/20 outline-none transition-colors duration-200"
+                      className="w-full bg-[#f5f5f7] border border-[#d2d2d7] focus:border-[rgba(0,113,227,0.1)] rounded-xl px-4 py-3 text-sm text-[#1d1d1f] placeholder-black/20 outline-none transition-colors duration-200"
                     />
-                  </div>
-                  <div>
+                  </motion.div>
+                  <motion.div variants={formInputVariants}>
                     <label className="text-xs text-[#6e6e73] mb-2 block uppercase tracking-wider">
                       Your Message
                     </label>
@@ -128,17 +169,18 @@ export default function Contact() {
                       value={form.message}
                       onChange={(e) => setForm({ ...form, message: e.target.value })}
                       placeholder="Tell us about your project, challenge, or idea..."
-                      className="w-full bg-[#f5f5f7] border border-[#d2d2d7] focus:border-[rgba(0,113,227,0.1)] rounded-xl px-4 py-3 text-sm text-[#1d1d1f] placeholder-white/20 outline-none transition-colors duration-200 resize-none"
+                      className="w-full bg-[#f5f5f7] border border-[#d2d2d7] focus:border-[rgba(0,113,227,0.1)] rounded-xl px-4 py-3 text-sm text-[#1d1d1f] placeholder-black/20 outline-none transition-colors duration-200 resize-none"
                     />
-                  </div>
-                  <button
+                  </motion.div>
+                  <motion.button
+                    variants={formInputVariants}
                     type="submit"
                     className="btn-primary py-3.5 text-sm"
                     style={{ fontFamily: "var(--font-display)" }}
                   >
                     Send Message <Send size={15} />
-                  </button>
-                </form>
+                  </motion.button>
+                </motion.form>
               ) : (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}

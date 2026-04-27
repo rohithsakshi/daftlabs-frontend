@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import SmoothScrollProvider from "@/components/SmoothScrollProvider";
+import PageTransition from "@/components/PageTransition";
 
 export const metadata: Metadata = {
   title: "DAFT Labs — Technology Reimagined",
@@ -20,7 +22,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased bg-zinc-950 text-white">
+        <SmoothScrollProvider>
+          <PageTransition />
+          {children}
+        </SmoothScrollProvider>
+      </body>
     </html>
   );
 }
