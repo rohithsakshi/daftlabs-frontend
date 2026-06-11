@@ -14,7 +14,7 @@ export default function PageTransition() {
 
   return (
     <motion.div
-      className="fixed inset-0 z-[9998] bg-black pointer-events-none"
+      className="fixed inset-0 z-[9998] bg-[var(--bg-primary)] pointer-events-none"
       initial={{ scaleY: 1 }}
       animate={{ scaleY: 0 }}
       exit={{ scaleY: 1 }}

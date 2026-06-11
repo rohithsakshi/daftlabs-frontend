@@ -52,10 +52,10 @@ export default function Footer() {
   };
 
   return (
-    <footer ref={containerRef} className="relative border-t border-[#d2d2d7] overflow-hidden bg-white">
+    <footer ref={containerRef} className="relative border-t border-[var(--border)] overflow-hidden bg-[var(--bg-secondary)]">
       <motion.div style={{ y }} className="pt-16 pb-8">
         {/* subtle background glow */}
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[400px] h-[200px] bg-[#0071e3] opacity-[0.03] blur-[80px] pointer-events-none" />
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[400px] h-[200px] bg-[var(--accent)] opacity-[0.03] blur-[80px] pointer-events-none" />
 
         <div ref={inViewRef} className="max-w-6xl mx-auto px-6">
           <motion.div 
@@ -66,7 +66,7 @@ export default function Footer() {
           >
             {/* 🔥 BRAND */}
             <motion.div variants={colVariants} className="md:col-span-2">
-              <a href="#" className="flex items-center gap-3 mb-4 group">
+              <a href="#" className="flex items-center gap-3 mb-4 group" aria-label="DAFT Labs Home">
                 {/* ✅ SAME NAVBAR SVG LOGO WITH CONTINUOUS ROTATION */}
                 <motion.svg
                   animate={{ rotate: 360 }}
@@ -77,14 +77,14 @@ export default function Footer() {
                   <path
                     d="M 110 30 A 70 70 0 0 0 40 100 A 70 70 0 0 0 110 170"
                     fill="none"
-                    stroke="#0071e3"
+                    stroke="var(--accent)"
                     strokeWidth="15"
                     strokeLinecap="round"
                   />
                   <path
                     d="M 90 50 A 50 50 0 0 0 50 100 A 50 50 0 0 0 90 150"
                     fill="none"
-                    stroke="#0071e3"
+                    stroke="var(--accent)"
                     strokeWidth="8"
                     strokeLinecap="round"
                   />
@@ -95,10 +95,10 @@ export default function Footer() {
                     style={{ originX: "100px", originY: "100px" }}
                     x="85"
                     y="118"
-                    fontFamily="'Inter', -apple-system, sans-serif"
+                    fontFamily="'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif"
                     fontWeight="900"
                     fontSize="64"
-                    fill="#1d1d1f"
+                    fill="var(--text-primary)"
                     letterSpacing="-4"
                   >
                     DL
@@ -107,15 +107,15 @@ export default function Footer() {
 
                 {/* TEXT */}
                 <span
-                  className="text-xl font-black tracking-tight group-hover:text-[#0071e3] transition-colors duration-300"
-                  style={{ fontFamily: "'Inter', -apple-system, sans-serif" }}
+                  className="text-xl font-black tracking-tight text-[var(--text-primary)] group-hover:text-[var(--accent)] transition-colors duration-300"
+                  style={{ fontFamily: "'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif" }}
                 >
-                  DAFT <span className="text-[#0071e3]">Labs</span>
+                  DAFT <span className="text-[var(--accent)]">Labs</span>
                 </span>
               </a>
 
               {/* DESCRIPTION */}
-              <p className="text-[#6e6e73] text-sm leading-relaxed max-w-xs mb-6">
+              <p className="text-[var(--text-secondary)] text-sm leading-relaxed max-w-xs mb-6">
                 Technology Reimagined. We engineer AI-powered systems, automation platforms,
                 and enterprise software for ambitious organizations.
               </p>
@@ -126,7 +126,8 @@ export default function Footer() {
                   <MagneticButton key={i}>
                     <a
                       href={s.href}
-                      className="w-9 h-9 bg-white/80 border border-[#d2d2d7] shadow-sm backdrop-blur-xl rounded-lg flex items-center justify-center text-[#6e6e73] hover:text-[#0071e3] hover:border-[rgba(0,113,227,0.1)] transition-all duration-200"
+                      className="w-9 h-9 bg-[var(--surface-primary)] border border-[var(--border)] rounded-lg flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--accent)] hover:border-[var(--border-accent)] transition-all duration-200"
+                      aria-label={i === 0 ? "LinkedIn" : "Email"}
                     >
                       {s.icon}
                     </a>
@@ -139,8 +140,8 @@ export default function Footer() {
             {Object.entries(footerLinks).map(([section, links]) => (
               <motion.div variants={colVariants} key={section}>
                 <p
-                  className="text-xs font-semibold text-[#6e6e73] mb-5 tracking-widest uppercase"
-                  style={{ fontFamily: "var(--font-display)" }}
+                  className="text-xs font-semibold text-[var(--text-muted)] mb-5 tracking-widest uppercase"
+                  style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
                 >
                   {section}
                 </p>
@@ -150,7 +151,7 @@ export default function Footer() {
                     <li key={link.label}>
                       <a
                         href={link.href}
-                        className="text-sm text-[#6e6e73] hover:text-[#1d1d1f] transition-colors duration-200"
+                        className="text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors duration-200"
                       >
                         {link.label}
                       </a>
@@ -162,12 +163,12 @@ export default function Footer() {
           </motion.div>
 
           {/* 🔻 BOTTOM BAR */}
-          <motion.div variants={colVariants} initial="hidden" animate={inView ? "visible" : "hidden"} className="border-t border-[#d2d2d7] pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-[#6e6e73] text-xs">
+          <motion.div variants={colVariants} initial="hidden" animate={inView ? "visible" : "hidden"} className="border-t border-[var(--border)] pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+            <p className="text-[var(--text-muted)] text-xs">
               © {new Date().getFullYear()} DAFT Labs. All rights reserved.
             </p>
 
-            <p className="text-[#6e6e73] text-xs">
+            <p className="text-[var(--text-muted)] text-xs">
               Built with precision · Coimbatore, India
             </p>
           </motion.div>

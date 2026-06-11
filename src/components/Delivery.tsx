@@ -76,14 +76,14 @@ export default function Delivery() {
   return (
     <section ref={containerRef} id="delivery" className="relative py-28 overflow-hidden">
       <div className="absolute inset-0 dot-grid opacity-20" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-[#0071e3] opacity-[0.03] blur-[100px] pointer-events-none rounded-full" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-[var(--accent)] opacity-[0.03] blur-[100px] pointer-events-none rounded-full" />
 
       {/* Global section progress indicator */}
       <motion.div 
-        className="absolute left-0 top-0 bottom-0 w-1 bg-[#0071e3]/10 transform origin-top"
+        className="absolute left-0 top-0 bottom-0 w-1 bg-[var(--accent)]/10 transform origin-top"
       >
         <motion.div 
-          className="w-full bg-[#0071e3]"
+          className="w-full bg-[var(--accent)]"
           style={{ height: "100%", scaleY: progressSpring, transformOrigin: "top" }}
         />
       </motion.div>
@@ -97,13 +97,13 @@ export default function Delivery() {
         >
           <p className="section-label mb-4">How We Work</p>
           <h2
-            className="text-4xl md:text-5xl font-bold mb-5"
-            style={{ fontFamily: "var(--font-display)" }}
+            className="text-4xl md:text-5xl font-bold mb-5 text-[var(--text-primary)]"
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
           >
             A Process Built on{" "}
-            <span className="text-[#0071e3]">Transparency</span>
+            <span className="text-[var(--accent)]">Transparency</span>
           </h2>
-          <p className="text-[#6e6e73] max-w-lg mx-auto text-base">
+          <p className="text-[var(--text-secondary)] max-w-lg mx-auto text-base">
             No black boxes. No surprise pivots. Just a structured, accountable delivery process that keeps you informed at every milestone.
           </p>
         </motion.div>
@@ -117,7 +117,7 @@ export default function Delivery() {
                 y1="0"
                 x2="100%"
                 y2="0"
-                stroke="url(#gradient)"
+                stroke="url(#gradient-dark)"
                 strokeWidth="2"
                 strokeDasharray="8 8"
                 initial={{ pathLength: 0, opacity: 0 }}
@@ -125,10 +125,10 @@ export default function Delivery() {
                 transition={{ duration: 2, ease: "easeInOut", delay: 0.5 }}
               />
               <defs>
-                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" stopColor="rgba(0,113,227,0.1)" />
-                  <stop offset="50%" stopColor="rgba(0,113,227,0.6)" />
-                  <stop offset="100%" stopColor="rgba(0,113,227,0.1)" />
+                <linearGradient id="gradient-dark" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="rgba(37,99,235,0.1)" />
+                  <stop offset="50%" stopColor="rgba(37,99,235,0.5)" />
+                  <stop offset="100%" stopColor="rgba(37,99,235,0.1)" />
                 </linearGradient>
               </defs>
             </svg>
@@ -144,28 +144,28 @@ export default function Delivery() {
               <motion.div
                 key={step.title}
                 variants={stepVariants}
-                className="bg-white border border-[#d2d2d7] shadow-sm rounded-2xl p-7 relative group hover:bg-[#f5f5f7] transition-colors duration-300"
+                className="bg-[var(--surface-primary)] border border-[var(--border)] rounded-2xl p-7 relative group hover:bg-[var(--surface-hover)] hover:border-[var(--border-hover)] transition-all duration-300"
               >
                 {/* Step number */}
                 <div
-                  className="text-5xl font-bold text-[#1d1d1f]/[0.04] absolute top-5 right-6 select-none transition-transform duration-500 group-hover:scale-110"
-                  style={{ fontFamily: "var(--font-display)" }}
+                  className="text-5xl font-bold text-white/[0.03] absolute top-5 right-6 select-none transition-transform duration-500 group-hover:scale-110"
+                  style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
                 >
                   {step.num}
                 </div>
 
                 {/* Icon */}
-                <div className="w-11 h-11 rounded-xl bg-[rgba(0,113,227,0.1)] border border-[rgba(0,113,227,0.1)] flex items-center justify-center text-[#0071e3] mb-6 group-hover:bg-[#0071e3] group-hover:text-white transition-colors duration-300">
+                <div className="w-11 h-11 rounded-xl bg-[var(--accent-subtle)] border border-[var(--border-accent)] flex items-center justify-center text-[var(--accent)] mb-6 group-hover:bg-[var(--accent)] group-hover:text-white transition-colors duration-300">
                   {step.icon}
                 </div>
 
                 <h3
-                  className="text-lg font-bold mb-3 group-hover:text-[#0071e3] transition-colors duration-300"
-                  style={{ fontFamily: "var(--font-display)" }}
+                  className="text-lg font-bold mb-3 text-[var(--text-primary)] group-hover:text-[var(--accent)] transition-colors duration-300"
+                  style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
                 >
                   {step.title}
                 </h3>
-                <p className="text-[#6e6e73] text-sm leading-relaxed mb-5">{step.desc}</p>
+                <p className="text-[var(--text-secondary)] text-sm leading-relaxed mb-5">{step.desc}</p>
 
                 {/* Tags */}
                 <motion.div 
@@ -176,7 +176,7 @@ export default function Delivery() {
                     <motion.span
                       key={tag}
                       variants={tagVariants}
-                      className="text-xs px-2.5 py-1 rounded-full bg-[rgba(0,113,227,0.1)] border border-[rgba(0,113,227,0.1)] text-[#0071e3]/80"
+                      className="text-xs px-2.5 py-1 rounded-full bg-[var(--accent-subtle)] border border-[var(--border-accent)] text-[var(--accent)]/80"
                     >
                       {tag}
                     </motion.span>

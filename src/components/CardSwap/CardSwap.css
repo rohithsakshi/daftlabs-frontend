@@ -1,0 +1,8 @@
+.card-swap-item {
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.card-swap-item:hover {
+  box-shadow: 0 0 40px rgba(37, 99, 235, 0.25);
+  border-color: rgba(37, 99, 235, 0.5) !important;
+}

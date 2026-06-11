@@ -22,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className="antialiased bg-zinc-950 text-white">
+      <body className="antialiased bg-[#081220] text-[#F1F5F9]">
         <SmoothScrollProvider>
           <PageTransition />
           {children}

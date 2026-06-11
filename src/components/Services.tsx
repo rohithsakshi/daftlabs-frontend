@@ -6,17 +6,9 @@ import {
   Bot, Cloud, Building2, Rocket, Code2, Lightbulb,
   TestTube2, Headphones, X, CheckCircle2, ChevronRight
 } from "lucide-react";
-import TiltCard from "./TiltCard";
+import MagicBento, { BentoItem } from "./MagicBento/MagicBento";
 
-type Service = {
-  icon: React.ReactNode;
-  title: string;
-  short: string;
-  detail: string;
-  bullets: string[];
-};
-
-const services: Service[] = [
+const services: BentoItem[] = [
   {
     icon: <Bot size={22} />,
     title: "Automation, AI & Data",
@@ -124,91 +116,60 @@ const services: Service[] = [
 ];
 
 export default function Services() {
-  const [selected, setSelected] = useState<Service | null>(null);
+  const [selected, setSelected] = useState<BentoItem | null>(null);
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
-  const cardVariants = {
-    hidden: { opacity: 0, scale: 0.8, rotate: -5 },
-    visible: { 
-      opacity: 1, 
-      scale: 1, 
-      rotate: 0, 
-      transition: { type: "spring", stiffness: 100, damping: 15 } 
-    }
-  };
-
   return (
-    <section id="services" className="relative py-28 overflow-hidden">
-      <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-[#0071e3] opacity-[0.03] blur-[120px] pointer-events-none" />
+    <section id="services" className="relative py-28 overflow-hidden bg-[#081220]">
+      {/* Background Ambience */}
+      <div className="absolute right-0 top-1/3 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[var(--accent)] opacity-[0.03] blur-[140px] pointer-events-none" />
 
-      <div ref={ref} className="max-w-6xl mx-auto px-6">
+      <div ref={ref} className="max-w-7xl mx-auto px-6 relative z-10">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <p className="section-label mb-4">What We Do</p>
+          <p className="section-label mb-4">WHAT WE DO</p>
           <h2
-            className="text-4xl md:text-5xl font-bold mb-5"
-            style={{ fontFamily: "var(--font-display)" }}
+            className="text-4xl md:text-5xl font-black mb-5 text-[var(--text-primary)] tracking-tight"
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
           >
             Services Built for{" "}
-            <span className="text-[#0071e3]">Real Scale</span>
+            <span className="text-[var(--accent)]">Real Scale</span>
           </h2>
-          <p className="text-[#6e6e73] max-w-xl mx-auto text-base">
-            Eight focused disciplines. One team that owns the outcome.
+          <p className="text-[#94A3B8] max-w-xl mx-auto text-[17px] leading-relaxed">
+            Eight focused capabilities. One engineering team that owns the outcome.
           </p>
         </motion.div>
 
-        {/* Grid */}
+        {/* MagicBento Grid */}
         <motion.div
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          variants={{
-            visible: { transition: { staggerChildren: 0.08 } }
-          }}
-          className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 auto-rows-fr"
+          initial={{ opacity: 0, y: 40 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
         >
-          {services.map((svc) => (
-            <motion.div key={svc.title} variants={cardVariants} className="h-full">
-              <TiltCard className="h-full block">
-                <button
-                  title="Click to go deeper"
-                  onClick={() => setSelected(svc)}
-                  className="bg-white border border-[#d2d2d7] shadow-sm rounded-2xl p-7 text-left group hover:bg-[#f5f5f7] transition-all duration-500 cursor-pointer h-full w-full flex flex-col items-start"
-                >
-                  <motion.div 
-                    variants={{
-                      rest: { borderRadius: "12px", scale: 1 },
-                      hover: { borderRadius: "20px", scale: 1.1, backgroundColor: "rgba(0,113,227,0.1)" }
-                    }}
-                    initial="rest"
-                    whileHover="hover"
-                    className="w-12 h-12 bg-white/80 border border-[#d2d2d7] shadow-sm backdrop-blur-xl border border-[rgba(0,113,227,0.1)] flex items-center justify-center text-[#0071e3] mb-5 transition-colors duration-300"
-                  >
-                    {svc.icon}
-                  </motion.div>
-                  <h3
-                    className="font-bold text-[15px] mb-2 group-hover:text-[#0071e3] transition-colors duration-200"
-                    style={{ fontFamily: "var(--font-display)" }}
-                  >
-                    {svc.title}
-                  </h3>
-                  <p className="text-[#6e6e73] text-xs leading-relaxed mb-4 flex-grow">{svc.short}</p>
-                  <div className="flex items-center gap-1.5 text-[#0071e3] text-xs font-semibold opacity-100 md:opacity-0 group-hover:opacity-100 transition-all duration-200 md:group-hover:translate-x-1">
-                    Learn more <ChevronRight size={14} />
-                  </div>
-                </button>
-              </TiltCard>
-            </motion.div>
-          ))}
+          <MagicBento
+            items={services}
+            onCardClick={(service) => setSelected(service)}
+            textAutoHide={false}
+            enableStars={false}
+            enableSpotlight={true}
+            enableBorderGlow={true}
+            enableTilt={true}
+            enableMagnetism={true}
+            clickEffect={true}
+            spotlightRadius={280}
+            particleCount={8}
+            glowColor="37, 99, 235"
+          />
         </motion.div>
       </div>
 
-      {/* Side Panel / Modal */}
+      {/* Side Panel / Drawer */}
       <AnimatePresence>
         {selected && (
           <>
@@ -218,7 +179,7 @@ export default function Services() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setSelected(null)}
-              className="fixed inset-0 bg-black/40 backdrop-blur-md z-50"
+              className="fixed inset-0 bg-black/60 backdrop-blur-md z-[100]"
             />
 
             {/* Panel */}
@@ -227,48 +188,57 @@ export default function Services() {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: "100%", opacity: 0 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="fixed right-0 top-0 bottom-0 w-full max-w-md bg-white/80 border border-[#d2d2d7] shadow-sm backdrop-blur-xl border-l border-[#d2d2d7] z-50 overflow-y-auto"
+              className="fixed right-0 top-0 bottom-0 w-full max-w-md bg-[rgba(15,23,42,0.98)] backdrop-blur-2xl border-l border-[rgba(255,255,255,0.08)] z-[110] shadow-2xl flex flex-col"
             >
-              <div className="p-8">
-                <div className="flex items-start justify-between mb-8">
-                  <div className="w-12 h-12 rounded-xl bg-white/80 border border-[#d2d2d7] shadow-sm backdrop-blur-xl border border-[rgba(0,113,227,0.1)] flex items-center justify-center text-[#0071e3]">
+              <div className="p-6 sm:p-8 flex-grow overflow-y-auto hide-scrollbar flex flex-col">
+                <div className="flex items-start justify-between mb-6">
+                  <div className="w-12 h-12 rounded-[14px] bg-[rgba(37,99,235,0.1)] border border-[rgba(37,99,235,0.2)] flex items-center justify-center text-[var(--accent)] shadow-[0_0_20px_rgba(37,99,235,0.1)]">
                     {selected.icon}
                   </div>
                   <button
                     onClick={() => setSelected(null)}
-                    className="text-[#6e6e73] hover:text-[#1d1d1f] transition-colors p-1"
+                    className="text-[var(--text-muted)] hover:text-white bg-[rgba(255,255,255,0.05)] hover:bg-[rgba(255,255,255,0.1)] rounded-full transition-all p-1.5"
+                    aria-label="Close panel"
                   >
-                    <X size={20} />
+                    <X size={18} />
                   </button>
                 </div>
 
                 <h3
-                  className="text-2xl font-bold mb-3"
-                  style={{ fontFamily: "var(--font-display)" }}
+                  className="text-2xl font-bold mb-2 text-[#F8FAFC] leading-tight"
+                  style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
                 >
                   {selected.title}
                 </h3>
-                <p className="text-[#0071e3] text-sm font-medium mb-5">{selected.short}</p>
-                <p className="text-[#6e6e73] text-sm leading-relaxed mb-8">{selected.detail}</p>
+                <p className="text-[var(--accent)] text-xs font-bold tracking-wide uppercase mb-4">{selected.short}</p>
+                <p className="text-[#94A3B8] text-[13.5px] leading-relaxed mb-6">{selected.detail}</p>
 
-                <div className="space-y-3">
-                  <p className="section-label mb-4">Key Capabilities</p>
-                  {selected.bullets.map((b) => (
-                    <div key={b} className="flex items-start gap-3">
-                      <CheckCircle2 size={15} className="text-[#0071e3] mt-0.5 flex-shrink-0" />
-                      <span className="text-sm text-[#6e6e73]">{b}</span>
-                    </div>
+                <div className="space-y-2.5 flex-grow">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-[#64748B] mb-3">Key Capabilities</p>
+                  {selected.bullets.map((b, i) => (
+                    <motion.div 
+                      key={b} 
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.1 + (i * 0.05) }}
+                      className="flex items-start gap-3 p-2 rounded-xl hover:bg-[rgba(255,255,255,0.02)] transition-colors"
+                    >
+                      <CheckCircle2 size={16} className="text-[var(--accent)] mt-0.5 flex-shrink-0" />
+                      <span className="text-[13px] text-[#CBD5E1]">{b}</span>
+                    </motion.div>
                   ))}
                 </div>
 
-                <a
-                  href="#contact"
-                  onClick={() => setSelected(null)}
-                  className="mt-10 btn-primary w-full py-3.5 block text-center"
-                  style={{ fontFamily: "var(--font-display)" }}
-                >
-                  Discuss This Service <ChevronRight size={16} className="inline ml-1" />
-                </a>
+                <div className="mt-6 pt-4">
+                  <a
+                    href="#contact"
+                    onClick={() => setSelected(null)}
+                    className="btn-primary w-full py-3 block text-center text-[14px]"
+                    style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                  >
+                    Discuss This Service <ChevronRight size={16} className="inline ml-1" />
+                  </a>
+                </div>
               </div>
             </motion.div>
           </>

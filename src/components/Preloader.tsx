@@ -22,11 +22,16 @@ export default function Preloader() {
       {isLoading && (
         <motion.div
           key="preloader"
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-[#f5f5f7]"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-[var(--bg-primary)]"
           initial={{ y: 0 }}
           exit={{ y: "-100%" }}
           transition={{ duration: 0.9, ease: appleEase }}
         >
+          {/* Subtle radial glow behind logo */}
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            <div className="w-[400px] h-[400px] rounded-full bg-[var(--accent)] opacity-[0.04] blur-[120px]" />
+          </div>
+
           <div className="relative flex items-center justify-center w-80 h-80 overflow-visible">
             
             {/* The SVG Swooshes (Renders around the DL after collapse) */}
@@ -35,7 +40,7 @@ export default function Preloader() {
               <motion.path
                 d="M 110 30 A 70 70 0 0 0 40 100 A 70 70 0 0 0 110 170"
                 fill="none"
-                stroke="#0071e3"
+                stroke="var(--accent)"
                 strokeWidth="10"
                 strokeLinecap="round"
                 initial={{ pathLength: 0, opacity: 0 }}
@@ -47,7 +52,7 @@ export default function Preloader() {
               <motion.path
                 d="M 90 50 A 50 50 0 0 0 50 100 A 50 50 0 0 0 90 150"
                 fill="none"
-                stroke="#0071e3"
+                stroke="var(--accent)"
                 strokeWidth="5"
                 strokeLinecap="round"
                 initial={{ pathLength: 0, opacity: 0 }}
@@ -58,8 +63,8 @@ export default function Preloader() {
 
             {/* Topography Morph Sequence */}
             <motion.div 
-              className="flex items-end font-black z-10 text-[#1d1d1f]"
-              style={{ fontFamily: "'Inter', -apple-system, sans-serif" }}
+              className="flex items-end font-black z-10 text-[var(--text-primary)]"
+              style={{ fontFamily: "'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif" }}
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0, x: [0, -10] }}
               transition={{ 

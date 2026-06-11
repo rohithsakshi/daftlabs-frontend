@@ -3,7 +3,6 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowRight, Play, Sparkles } from "lucide-react";
 import MagneticButton from "./MagneticButton";
-import AnimatedCounter from "./AnimatedCounter";
 import { useRef } from "react";
 
 export default function Hero() {
@@ -46,15 +45,21 @@ export default function Hero() {
 
   return (
     <section ref={containerRef} className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
-      {/* Background Effects */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#ffffff] to-[#f5f5f7] -z-20" />
+      {/* Background — deep navy gradient */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[var(--bg-secondary)] via-[var(--bg-primary)] to-[var(--bg-primary)] -z-20" />
+
+      {/* Subtle radial glow — hero centerpiece lighting */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-[var(--accent)] opacity-[0.06] blur-[150px] rounded-full pointer-events-none -z-10" />
 
       {/* Animated Ambient Orbs with Parallax */}
-      <motion.div style={{ y: backgroundY }} className="absolute inset-0 -z-10 overflow-hidden opacity-50 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-blue-100 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob" />
-        <div className="absolute top-1/3 right-1/4 w-[400px] h-[400px] bg-purple-100 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-2000" />
-        <div className="absolute -bottom-32 left-1/2 w-[600px] h-[600px] bg-pink-100 rounded-full mix-blend-multiply filter blur-3xl opacity-70 animate-blob animation-delay-4000" />
+      <motion.div style={{ y: backgroundY }} className="absolute inset-0 -z-10 overflow-hidden opacity-40 pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-blue-900/30 rounded-full mix-blend-screen filter blur-3xl animate-blob" />
+        <div className="absolute top-1/3 right-1/4 w-[400px] h-[400px] bg-indigo-900/20 rounded-full mix-blend-screen filter blur-3xl animate-blob animation-delay-2000" />
+        <div className="absolute -bottom-32 left-1/2 w-[600px] h-[600px] bg-blue-800/20 rounded-full mix-blend-screen filter blur-3xl animate-blob animation-delay-4000" />
       </motion.div>
+
+      {/* Dot grid overlay */}
+      <div className="absolute inset-0 dot-grid opacity-30 -z-10 pointer-events-none" />
 
       <motion.div
         initial="hidden"
@@ -64,9 +69,9 @@ export default function Hero() {
       >
         {/* Badge */}
         <motion.div variants={fadeUpVariant}>
-          <div className="inline-flex items-center gap-2 bg-white/80 shadow-sm backdrop-blur-xl border border-[rgba(0,113,227,0.1)] rounded-full px-4 py-1.5 mb-8">
-            <Sparkles size={12} className="text-[#0071e3]" />
-            <span className="text-xs font-medium text-[#6e6e73] tracking-wide">
+          <div className="inline-flex items-center gap-2 bg-[var(--surface-primary)]/80 backdrop-blur-xl border border-[var(--border)] rounded-full px-4 py-1.5 mb-8">
+            <Sparkles size={12} className="text-[var(--accent)]" />
+            <span className="text-xs font-medium text-[var(--text-secondary)] tracking-wide">
               AI · Automation · Enterprise Engineering
             </span>
           </div>
@@ -75,15 +80,17 @@ export default function Hero() {
         {/* Headline */}
         <motion.h1
           variants={containerVariants}
-          className="text-6xl md:text-8xl lg:text-[7.5rem] font-bold leading-[1.05] tracking-tight mb-8 flex flex-wrap justify-center gap-x-4"
-          style={{ fontFamily: "var(--font-display)" }}
+          className="text-5xl sm:text-6xl md:text-8xl lg:text-[7.5rem] font-bold leading-[1.05] tracking-tight mb-8 flex flex-wrap justify-center gap-x-4"
+          style={{ fontFamily: "'Plus Jakarta Sans', 'Inter', sans-serif" }}
         >
           {words.map((word, index) => (
             <motion.span
               key={index}
               variants={wordVariants}
               className={
-                word.includes("Faster.") ? "text-[#1d1d1f] font-bold" : ""
+                word.includes("Faster.")
+                  ? "text-[var(--accent)] font-bold"
+                  : "text-[var(--text-primary)]"
               }
             >
               {word}
@@ -94,7 +101,7 @@ export default function Hero() {
         {/* Subtext */}
         <motion.p
           variants={fadeUpVariant}
-          className="text-lg md:text-xl text-[#6e6e73] max-w-2xl mx-auto leading-relaxed mb-12 font-light"
+          className="text-base sm:text-lg md:text-xl text-[var(--text-secondary)] max-w-2xl mx-auto leading-relaxed mb-12 font-light"
         >
           We engineer intelligent systems that work as hard as your ambitions.
           From AI pipelines to enterprise platforms — DAFT Labs turns your most
@@ -110,7 +117,7 @@ export default function Hero() {
             <a
               href="#contact"
               className="btn-primary px-8 py-4 text-[15px] flex items-center group"
-              style={{ fontFamily: "var(--font-display)" }}
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             >
               Start Your Project
               <ArrowRight size={16} className="ml-2 group-hover:translate-x-1 transition-transform duration-200" />
@@ -120,42 +127,19 @@ export default function Hero() {
           <MagneticButton>
             <a
               href="#services"
-              className="btn-secondary px-8 py-4 text-[15px] flex items-center group bg-white shadow-sm hover:shadow-md transition-shadow rounded-full"
+              className="btn-secondary px-8 py-4 text-[15px] flex items-center group"
             >
-              <Play size={14} className="text-[#0071e3] fill-[#2563eb] mr-2" />
+              <Play size={14} className="text-[var(--accent)] fill-[var(--accent)] mr-2" />
               See What We Build
             </a>
           </MagneticButton>
         </motion.div>
 
-        {/* Stats bar */}
-        <motion.div
-          variants={fadeUpVariant}
-          className="mt-24 grid grid-cols-3 gap-8 max-w-lg mx-auto border-t border-[#d2d2d7] pt-12"
-        >
-          <div className="text-center">
-            <div className="text-3xl font-bold text-[#0071e3] mb-1" style={{ fontFamily: "var(--font-display)" }}>
-              <AnimatedCounter value={4} />
-            </div>
-            <div className="text-xs text-[#6e6e73] tracking-wide font-medium uppercase mt-2">Active Projects</div>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl font-bold text-[#0071e3] mb-1" style={{ fontFamily: "var(--font-display)" }}>
-              <AnimatedCounter value={8} />
-            </div>
-            <div className="text-xs text-[#6e6e73] tracking-wide font-medium uppercase mt-2">Core Services</div>
-          </div>
-          <div className="text-center">
-            <div className="text-3xl font-bold text-[#0071e3] mb-1" style={{ fontFamily: "var(--font-display)" }}>
-              <AnimatedCounter value={100} />%
-            </div>
-            <div className="text-xs text-[#6e6e73] tracking-wide font-medium uppercase mt-2">Client Satisfaction</div>
-          </div>
-        </motion.div>
+
       </motion.div>
 
       {/* Bottom gradient fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[var(--bg)] to-transparent pointer-events-none" />
+      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[var(--bg-primary)] to-transparent pointer-events-none" />
     </section>
   );
 }

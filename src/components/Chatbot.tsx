@@ -82,9 +82,10 @@ export default function Chatbot() {
       {/* Floating Button */}
       <motion.button
         onClick={() => setOpen(!open)}
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-[#0071e3] hover:bg-[#1d4ed8] text-black flex items-center justify-center shadow-[0_0_30px_rgba(0,113,227,0.1)] transition-colors duration-200"
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white flex items-center justify-center shadow-[0_0_30px_rgba(37,99,235,0.3)] transition-colors duration-200"
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.95 }}
+        aria-label={open ? "Close chat" : "Open chat"}
       >
         {open ? <X size={22} /> : <MessageCircle size={22} />}
       </motion.button>
@@ -97,21 +98,21 @@ export default function Chatbot() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.92, y: 20 }}
             transition={{ type: "spring", stiffness: 300, damping: 28 }}
-            className="fixed bottom-24 right-6 z-50 w-[340px] bg-white/80 border border-[#d2d2d7] shadow-sm backdrop-blur-xl border border-[#d2d2d7] rounded-2xl overflow-hidden shadow-2xl flex flex-col"
+            className="fixed bottom-24 right-6 z-50 w-[340px] bg-[var(--surface-primary)]/95 backdrop-blur-xl border border-[var(--border)] rounded-2xl overflow-hidden shadow-2xl shadow-black/30 flex flex-col"
             style={{ maxHeight: "500px" }}
           >
             {/* Header */}
-            <div className="flex items-center gap-3 px-4 py-4 border-b border-[#d2d2d7] bg-[rgba(0,113,227,0.1)]">
-              <div className="w-9 h-9 rounded-full bg-[#0071e3] flex items-center justify-center flex-shrink-0">
-                <Bot size={18} className="text-black" />
+            <div className="flex items-center gap-3 px-4 py-4 border-b border-[var(--border)] bg-[var(--accent-subtle)]">
+              <div className="w-9 h-9 rounded-full bg-[var(--accent)] flex items-center justify-center flex-shrink-0">
+                <Bot size={18} className="text-white" />
               </div>
               <div>
-                <p className="text-sm font-bold" style={{ fontFamily: "var(--font-display)" }}>
+                <p className="text-sm font-bold text-[var(--text-primary)]" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
                   DAFT Assistant
                 </p>
                 <div className="flex items-center gap-1.5">
-                  <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-                  <span className="text-xs text-[#6e6e73]">Online</span>
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="text-xs text-[var(--text-muted)]">Online</span>
                 </div>
               </div>
             </div>
@@ -126,8 +127,8 @@ export default function Chatbot() {
                   <div
                     className={`max-w-[80%] text-sm px-3.5 py-2.5 rounded-xl leading-relaxed ${
                       msg.role === "user"
-                        ? "bg-[#0071e3] text-black font-medium rounded-br-sm"
-                        : "bg-white/80 border border-[#d2d2d7] shadow-sm backdrop-blur-xl border border-[#d2d2d7] text-[#6e6e73] rounded-bl-sm"
+                        ? "bg-[var(--accent)] text-white font-medium rounded-br-sm"
+                        : "bg-[var(--surface-secondary)] border border-[var(--border)] text-[var(--text-secondary)] rounded-bl-sm"
                     }`}
                   >
                     {msg.text}
@@ -137,12 +138,12 @@ export default function Chatbot() {
 
               {typing && (
                 <div className="flex justify-start">
-                  <div className="bg-white/80 border border-[#d2d2d7] shadow-sm backdrop-blur-xl border border-[#d2d2d7] px-4 py-3 rounded-xl rounded-bl-sm flex gap-1">
+                  <div className="bg-[var(--surface-secondary)] border border-[var(--border)] px-4 py-3 rounded-xl rounded-bl-sm flex gap-1">
                     {[0, 1, 2].map((i) => (
                       <span
                         key={i}
-                        className="w-1.5 h-1.5 rounded-full bg-white/40 inline-block"
-                        style={{ animation: `pulseOrange 1.2s ease ${i * 0.2}s infinite` }}
+                        className="w-1.5 h-1.5 rounded-full bg-[var(--accent)]/50 inline-block"
+                        style={{ animation: `pulseBlue 1.2s ease ${i * 0.2}s infinite` }}
                       />
                     ))}
                   </div>
@@ -157,7 +158,7 @@ export default function Chatbot() {
                 <button
                   key={qr}
                   onClick={() => sendMessage(qr)}
-                  className="text-xs px-2.5 py-1 rounded-full bg-white/80 border border-[#d2d2d7] shadow-sm backdrop-blur-xl border border-white/[0.1] text-[#6e6e73] hover:text-[#0071e3] hover:border-[rgba(0,113,227,0.1)] transition-colors duration-200"
+                  className="text-xs px-2.5 py-1 rounded-full bg-[var(--surface-secondary)] border border-[var(--border)] text-[var(--text-muted)] hover:text-[var(--accent)] hover:border-[var(--border-accent)] transition-colors duration-200"
                 >
                   {qr}
                 </button>
@@ -165,18 +166,20 @@ export default function Chatbot() {
             </div>
 
             {/* Input */}
-            <div className="flex items-center gap-2 px-3 py-3 border-t border-[#d2d2d7]">
+            <div className="flex items-center gap-2 px-3 py-3 border-t border-[var(--border)]">
               <input
                 type="text"
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && sendMessage(input)}
                 placeholder="Type a message..."
-                className="flex-1 bg-[#f5f5f7] border border-[#d2d2d7] rounded-xl px-3 py-2 text-sm text-[#1d1d1f] placeholder-white/25 outline-none focus:border-[rgba(0,113,227,0.1)] transition-colors"
+                className="flex-1 bg-[var(--bg-secondary)] border border-[var(--border)] rounded-xl px-3 py-2 text-sm text-[var(--text-primary)] placeholder-[var(--text-muted)]/50 outline-none focus:border-[var(--accent)] transition-colors"
+                aria-label="Chat message input"
               />
               <button
                 onClick={() => sendMessage(input)}
-                className="w-9 h-9 rounded-xl bg-[#0071e3] hover:bg-[#1d4ed8] text-black flex items-center justify-center flex-shrink-0 transition-colors duration-200"
+                className="w-9 h-9 rounded-xl bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white flex items-center justify-center flex-shrink-0 transition-colors duration-200"
+                aria-label="Send message"
               >
                 <Send size={15} />
               </button>
