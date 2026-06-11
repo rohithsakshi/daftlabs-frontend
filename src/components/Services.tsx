@@ -6,7 +6,14 @@ import {
   Bot, Cloud, Building2, Rocket, Code2, Lightbulb,
   TestTube2, Headphones, X, CheckCircle2, ChevronRight
 } from "lucide-react";
-import MagicBento, { BentoItem } from "./MagicBento/MagicBento";
+
+export interface BentoItem {
+  icon: React.ReactNode;
+  title: string;
+  short: string;
+  detail: string;
+  bullets: string[];
+}
 
 const services: BentoItem[] = [
   {
@@ -146,26 +153,42 @@ export default function Services() {
           </p>
         </motion.div>
 
-        {/* MagicBento Grid */}
+        {/* Service Grid */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
         >
-          <MagicBento
-            items={services}
-            onCardClick={(service) => setSelected(service)}
-            textAutoHide={false}
-            enableStars={false}
-            enableSpotlight={true}
-            enableBorderGlow={true}
-            enableTilt={true}
-            enableMagnetism={true}
-            clickEffect={true}
-            spotlightRadius={280}
-            particleCount={8}
-            glowColor="37, 99, 235"
-          />
+          {services.map((service, index) => (
+            <div
+              key={index}
+              onClick={() => setSelected(service)}
+              className="relative group bg-[#111827] border border-[rgba(255,255,255,0.08)] rounded-2xl p-6 flex flex-col cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:border-[rgba(59,130,246,0.45)] hover:shadow-[0_0_30px_rgba(59,130,246,0.15)] min-h-[260px] w-full"
+            >
+              <div className="flex justify-between items-start mb-4">
+                <div className="w-10 h-10 rounded-xl bg-[rgba(37,99,235,0.1)] border border-[rgba(37,99,235,0.2)] flex items-center justify-center text-[#3B82F6] group-hover:shadow-[0_0_15px_rgba(37,99,235,0.4)] group-hover:text-blue-400 transition-all duration-300">
+                  {service.icon}
+                </div>
+                <div className="px-3 py-1 rounded-full bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)] text-[10px] font-medium text-[#94A3B8] tracking-wide uppercase">
+                  Service
+                </div>
+              </div>
+              
+              <h3 className="text-lg font-bold text-[#F8FAFC] mb-3 leading-tight" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                {service.title}
+              </h3>
+              
+              <p className="text-[13px] text-[#94A3B8] leading-relaxed flex-grow">
+                {service.short}
+              </p>
+              
+              <div className="mt-5 pt-4 border-t border-[rgba(255,255,255,0.08)] flex items-center text-[13px] font-semibold text-[#3B82F6] transition-colors duration-300 group-hover:text-blue-400">
+                View Details 
+                <ChevronRight size={14} className="ml-1 transition-transform duration-300 group-hover:translate-x-1" />
+              </div>
+            </div>
+          ))}
         </motion.div>
       </div>
 

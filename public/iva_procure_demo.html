@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IVA Procure — Product Demo</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #07111f;
+    --navy2: #0c1c30;
+    --navy3: #0f2035;
+    --blue: #185FA5;
+    --blue-light: #378ADD;
+    --blue-dim: #B5D4F4;
+    --teal: #1D9E75;
+    --teal-light: #9FE1CB;
+    --amber: #EF9F27;
+    --amber-dim: #FAC775;
+    --red: #E24B4A;
+    --text-primary: #e8f0f8;
+    --text-secondary: #7aafdd;
+    --text-muted: #4a7ca8;
+    --border: rgba(56, 120, 180, 0.18);
+    --surface: rgba(255,255,255,0.04);
+    --surface2: rgba(255,255,255,0.07);
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--navy);
+    font-family: 'Inter', sans-serif;
+    overflow: hidden;
+    color: var(--text-primary);
+  }
+
+  /* ── STAGE ── */
+  #stage {
+    position: relative;
+    width: 1280px; height: 720px;
+    margin: 0 auto;
+    background: var(--navy);
+    overflow: hidden;
+  }
+  body { display: flex; align-items: center; justify-content: center; min-height: 100vh; background: #030810; }
+
+  /* ── CHROME FRAME ── */
+  #browser-chrome {
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 44px;
+    background: #0a1728;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; padding: 0 16px; gap: 10px;
+    z-index: 100;
+  }
+  .chrome-dots { display: flex; gap: 6px; }
+  .chrome-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .chrome-dot.r { background: #ff5f57; }
+  .chrome-dot.y { background: #febc2e; }
+  .chrome-dot.g { background: #28c840; }
+  .chrome-url {
+    flex: 1; height: 26px; background: var(--surface2); border-radius: 13px;
+    display: flex; align-items: center; padding: 0 14px;
+    font-size: 11px; color: var(--text-muted); max-width: 400px; margin: 0 auto;
+  }
+  .chrome-url span { color: var(--teal-light); margin-right: 6px; }
+
+  /* ── SIDEBAR ── */
+  #sidebar {
+    position: absolute; top: 44px; left: 0; width: 220px; bottom: 0;
+    background: var(--navy2);
+    border-right: 1px solid var(--border);
+    padding: 20px 0;
+    z-index: 10;
+  }
+  .logo-area { padding: 0 20px 20px; border-bottom: 1px solid var(--border); margin-bottom: 12px; }
+  .logo-text { font-size: 15px; font-weight: 600; color: var(--text-primary); letter-spacing: -0.3px; }
+  .logo-sub { font-size: 10px; color: var(--text-muted); margin-top: 1px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 20px; font-size: 12px; color: var(--text-secondary);
+    cursor: pointer; transition: all 0.2s; border-left: 2px solid transparent;
+  }
+  .nav-item.active { color: var(--text-primary); background: var(--surface2); border-left-color: var(--blue-light); }
+  .nav-item svg { width: 15px; height: 15px; opacity: 0.7; flex-shrink: 0; }
+  .nav-item.active svg { opacity: 1; }
+  .nav-badge {
+    margin-left: auto; background: var(--blue); color: var(--blue-dim);
+    font-size: 9px; padding: 1px 6px; border-radius: 8px; font-weight: 600;
+  }
+
+  /* ── MAIN CONTENT ── */
+  #main {
+    position: absolute; top: 44px; left: 220px; right: 0; bottom: 0;
+    overflow: hidden; background: var(--navy);
+  }
+
+  /* ── SCENES ── */
+  .scene {
+    position: absolute; inset: 0;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.5s ease;
+    padding: 28px 32px;
+  }
+  .scene.active { opacity: 1; pointer-events: all; }
+
+  /* ── SCENE HEADERS ── */
+  .scene-header { margin-bottom: 22px; }
+  .scene-eyebrow { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px; }
+  .scene-title { font-size: 22px; font-weight: 600; color: var(--text-primary); letter-spacing: -0.4px; }
+  .scene-sub { font-size: 12px; color: var(--text-secondary); margin-top: 4px; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 18px 20px;
+  }
+  .card-sm { padding: 12px 16px; border-radius: 8px; }
+  .card-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+  .card-value { font-size: 20px; font-weight: 600; color: var(--text-primary); }
+  .card-delta { font-size: 10px; color: var(--teal); margin-top: 2px; }
+
+  /* ── GRID ── */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+  .grid4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+
+  /* ── BADGES ── */
+  .badge { display: inline-flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 500; padding: 3px 9px; border-radius: 10px; }
+  .badge-blue { background: rgba(24,95,165,0.25); color: var(--blue-dim); }
+  .badge-teal { background: rgba(29,158,117,0.25); color: var(--teal-light); }
+  .badge-amber { background: rgba(239,159,39,0.2); color: var(--amber-dim); }
+  .badge-red { background: rgba(226,75,74,0.2); color: #F09595; }
+  .badge-purple { background: rgba(83,74,183,0.25); color: #AFA9EC; }
+
+  /* ── FORM ELEMENTS ── */
+  .field { margin-bottom: 14px; }
+  .field-label { font-size: 11px; color: var(--text-secondary); margin-bottom: 5px; }
+  .field-input {
+    width: 100%; height: 34px; background: var(--navy3); border: 1px solid var(--border);
+    border-radius: 6px; padding: 0 12px; font-size: 12px; color: var(--text-primary);
+    font-family: inherit;
+  }
+  .field-input.filled { border-color: rgba(55,138,221,0.4); color: var(--blue-dim); }
+  .field-select { height: 34px; background: var(--navy3); border: 1px solid var(--border); border-radius: 6px; padding: 0 12px; font-size: 12px; color: var(--text-secondary); width: 100%; }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    height: 34px; padding: 0 18px; border-radius: 6px;
+    font-size: 12px; font-weight: 500; cursor: pointer; border: none;
+    transition: all 0.15s; font-family: inherit;
+  }
+  .btn-primary { background: var(--blue); color: #fff; }
+  .btn-primary:hover { background: var(--blue-light); }
+  .btn-success { background: var(--teal); color: #fff; }
+  .btn-ghost { background: var(--surface2); color: var(--text-secondary); border: 1px solid var(--border); }
+  .btn-danger-ghost { background: rgba(226,75,74,0.1); color: #F09595; border: 1px solid rgba(226,75,74,0.2); }
+
+  /* ── TABLE ── */
+  .tbl { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .tbl th { text-align: left; font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.07em; padding: 8px 12px; border-bottom: 1px solid var(--border); font-weight: 500; }
+  .tbl td { padding: 10px 12px; border-bottom: 1px solid rgba(56,120,180,0.08); color: var(--text-secondary); }
+  .tbl tr:last-child td { border-bottom: none; }
+  .tbl tr.highlight td { background: var(--surface2); color: var(--text-primary); }
+
+  /* ── PROGRESS STEPS ── */
+  .steps {
+    display: flex; align-items: center; gap: 0; margin-bottom: 24px;
+  }
+  .step { display: flex; align-items: center; gap: 8px; }
+  .step-dot {
+    width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 600; flex-shrink: 0;
+  }
+  .step-dot.done { background: var(--teal); color: #fff; }
+  .step-dot.active { background: var(--blue); color: #fff; box-shadow: 0 0 0 3px rgba(24,95,165,0.25); }
+  .step-dot.pending { background: var(--surface2); color: var(--text-muted); border: 1px solid var(--border); }
+  .step-label { font-size: 11px; color: var(--text-muted); white-space: nowrap; }
+  .step-label.active { color: var(--text-primary); font-weight: 500; }
+  .step-line { flex: 1; height: 1px; background: var(--border); min-width: 18px; }
+  .step-line.done { background: var(--teal); }
+
+  /* ── MINI CHART ── */
+  .chart-wrap { position: relative; height: 90px; display: flex; align-items: flex-end; gap: 5px; }
+  .bar-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .bar { width: 100%; border-radius: 3px 3px 0 0; transition: height 1s ease; }
+  .bar-lbl { font-size: 9px; color: var(--text-muted); }
+
+  /* ── DONUT ── */
+  .donut-wrap { display: flex; align-items: center; gap: 20px; }
+  .donut-legend { display: flex; flex-direction: column; gap: 6px; }
+  .legend-row { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-secondary); }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ── MATCH LINES ── */
+  .match-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 14px; border-radius: 6px; margin-bottom: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    transition: all 0.4s;
+  }
+  .match-row.matched { border-color: rgba(29,158,117,0.35); background: rgba(29,158,117,0.07); }
+  .match-row.flagged { border-color: rgba(239,159,39,0.35); background: rgba(239,159,39,0.06); }
+  .match-status { font-size: 11px; font-weight: 500; }
+  .match-ok { color: var(--teal-light); }
+  .match-warn { color: var(--amber-dim); }
+
+  /* ── VENDOR CARD ── */
+  .vendor-card {
+    border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px;
+    background: var(--surface); transition: all 0.3s; cursor: pointer;
+  }
+  .vendor-card.selected { border-color: var(--teal); background: rgba(29,158,117,0.08); }
+  .vendor-score-bar { height: 4px; border-radius: 2px; background: var(--surface2); margin-top: 8px; overflow: hidden; }
+  .vendor-score-fill { height: 100%; border-radius: 2px; background: var(--teal); transition: width 1s ease 0.3s; }
+
+  /* ── CURSOR ── */
+  #cursor {
+    position: absolute; width: 18px; height: 18px; z-index: 9999;
+    pointer-events: none; transition: left 0.6s cubic-bezier(.4,0,.2,1), top 0.6s cubic-bezier(.4,0,.2,1);
+  }
+  #cursor svg { width: 18px; height: 18px; filter: drop-shadow(0 1px 3px rgba(0,0,0,0.6)); }
+  #cursor.clicking { transform: scale(0.85); }
+  #cursor-ripple {
+    position: absolute; width: 28px; height: 28px; border-radius: 50%;
+    border: 2px solid rgba(55,138,221,0.6); transform: translate(-50%,-50%);
+    pointer-events: none; z-index: 9998; opacity: 0;
+    transition: left 0.6s cubic-bezier(.4,0,.2,1), top 0.6s cubic-bezier(.4,0,.2,1);
+  }
+  @keyframes rippleAnim {
+    0% { transform: translate(-50%,-50%) scale(0.5); opacity: 0.8; }
+    100% { transform: translate(-50%,-50%) scale(2); opacity: 0; }
+  }
+  #cursor-ripple.rippling { animation: rippleAnim 0.5s ease forwards; }
+
+  /* ── CAPTION BAR ── */
+  #caption-bar {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 68px;
+    background: linear-gradient(transparent, rgba(7,17,31,0.97));
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+    padding-bottom: 10px; z-index: 200;
+  }
+  #voiceover-text {
+    font-size: 13px; color: rgba(255,255,255,0.9); text-align: center;
+    max-width: 820px; line-height: 1.5; min-height: 20px;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.8);
+    transition: opacity 0.3s;
+  }
+
+  /* ── SCENE LABEL ── */
+  #scene-label {
+    position: absolute; top: 54px; right: 18px; z-index: 300;
+    display: flex; align-items: center; gap: 8px;
+  }
+  #scene-tag {
+    background: rgba(7,17,31,0.75); border: 1px solid var(--border);
+    backdrop-filter: blur(8px); border-radius: 20px;
+    padding: 4px 14px; font-size: 11px; color: var(--text-secondary);
+    display: flex; align-items: center; gap: 6px;
+  }
+  #progress-dots { display: flex; gap: 4px; align-items: center; }
+  .pdot { width: 6px; height: 6px; border-radius: 50%; background: var(--surface2); transition: all 0.3s; }
+  .pdot.active { background: var(--blue-light); width: 18px; border-radius: 3px; }
+  .pdot.done { background: var(--teal); }
+
+  /* ── TIMELINE BAR ── */
+  #timeline {
+    position: absolute; bottom: 68px; left: 0; right: 0; height: 2px;
+    background: rgba(255,255,255,0.06); z-index: 200;
+  }
+  #timeline-fill {
+    height: 100%; background: var(--blue-light); width: 0%;
+    transition: width 0.1s linear;
+  }
+
+  /* ── PLAY OVERLAY ── */
+  #play-overlay {
+    position: absolute; inset: 0; z-index: 500;
+    background: rgba(7,17,31,0.92);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+  }
+  .overlay-logo { font-size: 28px; font-weight: 600; letter-spacing: -0.5px; color: #fff; }
+  .overlay-sub { font-size: 13px; color: var(--text-secondary); margin-top: -12px; }
+  .play-btn {
+    width: 60px; height: 60px; border-radius: 50%;
+    background: var(--blue); border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.15s, background 0.15s;
+  }
+  .play-btn:hover { background: var(--blue-light); transform: scale(1.05); }
+  .play-btn svg { width: 22px; height: 22px; fill: #fff; margin-left: 3px; }
+  .overlay-hint { font-size: 11px; color: var(--text-muted); }
+
+  /* ── NOTIFICATION TOAST ── */
+  #toast {
+    position: absolute; top: 60px; right: 18px; z-index: 400;
+    background: var(--navy2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 10px 14px;
+    max-width: 240px; opacity: 0;
+    transition: opacity 0.3s, transform 0.3s;
+    transform: translateX(20px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  }
+  #toast.show { opacity: 1; transform: translateX(0); }
+  .toast-title { font-size: 11px; font-weight: 500; color: var(--text-primary); margin-bottom: 2px; }
+  .toast-body { font-size: 10px; color: var(--text-secondary); }
+
+  /* ── TYPING CURSOR ── */
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+  .typing-cursor { display: inline-block; width: 2px; height: 12px; background: var(--blue-light); margin-left: 1px; animation: blink 0.8s infinite; vertical-align: middle; }
+
+  /* ── HIGHLIGHT PULSE ── */
+  @keyframes highlightPulse {
+    0% { box-shadow: 0 0 0 0 rgba(55,138,221,0.5); }
+    100% { box-shadow: 0 0 0 8px rgba(55,138,221,0); }
+  }
+  .highlight-pulse { animation: highlightPulse 0.6s ease forwards; }
+
+  /* ── FADE IN ── */
+  @keyframes fadeInUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
+  .fade-in { animation: fadeInUp 0.4s ease forwards; }
+  .fade-in-delay-1 { animation: fadeInUp 0.4s ease 0.1s both; }
+  .fade-in-delay-2 { animation: fadeInUp 0.4s ease 0.2s both; }
+  .fade-in-delay-3 { animation: fadeInUp 0.4s ease 0.3s both; }
+  .fade-in-delay-4 { animation: fadeInUp 0.4s ease 0.4s both; }
+
+  /* ── COUNT UP ── */
+  @keyframes countUp { from { opacity:0.4; } to { opacity:1; } }
+
+  /* ── ZOOM PAN ── */
+  @keyframes zoomIn { from { transform: scale(1.04); } to { transform: scale(1); } }
+  .zoom-in { animation: zoomIn 0.7s ease forwards; }
+
+  /* ── STATUS PILL ── */
+  .status-flow {
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  }
+  .status-node {
+    padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 500;
+    border: 1px solid var(--border); color: var(--text-muted); background: var(--surface);
+    transition: all 0.4s;
+  }
+  .status-node.current { background: var(--blue); color: #fff; border-color: var(--blue); }
+  .status-node.complete { background: rgba(29,158,117,0.2); color: var(--teal-light); border-color: rgba(29,158,117,0.3); }
+  .status-arrow { color: var(--text-muted); font-size: 11px; }
+
+  /* ── SPLIT MATCH ── */
+  .split-match { display: grid; grid-template-columns: 1fr 40px 1fr; gap: 0; align-items: start; }
+  .match-connector { display: flex; flex-direction: column; align-items: center; padding-top: 14px; gap: 2px; }
+  .match-line-v { width: 1px; height: 24px; background: var(--border); }
+  .match-line-v.matched { background: var(--teal); }
+
+  /* ── STORYBOARD CARD ── */
+  .sb-card {
+    position: absolute; bottom: 80px; left: 18px;
+    background: rgba(7,17,31,0.85); border: 1px solid var(--border);
+    border-radius: 8px; padding: 8px 14px; backdrop-filter: blur(8px);
+    font-size: 10px; color: var(--text-secondary); z-index: 300;
+    max-width: 220px; opacity: 0; transition: opacity 0.3s;
+  }
+  .sb-card.show { opacity: 1; }
+  .sb-card strong { color: var(--text-primary); display: block; margin-bottom: 2px; font-size: 11px; }
+</style>
+</head>
+<body>
+
+<div id="stage">
+
+  <!-- BROWSER CHROME -->
+  <div id="browser-chrome">
+    <div class="chrome-dots">
+      <div class="chrome-dot r"></div>
+      <div class="chrome-dot y"></div>
+      <div class="chrome-dot g"></div>
+    </div>
+    <div class="chrome-url">
+      <span>🔒</span> app.ivaprocure.com / dashboard
+    </div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div id="sidebar">
+    <div class="logo-area">
+      <div class="logo-text">IVA Procure</div>
+      <div class="logo-sub">Enterprise Procurement</div>
+    </div>
+    <nav id="sidenav">
+      <div class="nav-item active" data-nav="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+      </div>
+      <div class="nav-item" data-nav="requests">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>
+        Purchase Requests
+        <span class="nav-badge" id="badge-requests">3</span>
+      </div>
+      <div class="nav-item" data-nav="approvals">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        Approvals
+        <span class="nav-badge" id="badge-approvals" style="background:#534AB7;color:#CECBF6">1</span>
+      </div>
+      <div class="nav-item" data-nav="vendors">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+        Vendors
+      </div>
+      <div class="nav-item" data-nav="orders">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        Purchase Orders
+      </div>
+      <div class="nav-item" data-nav="invoices">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        Invoices
+      </div>
+      <div class="nav-item" data-nav="reports">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Reports
+      </div>
+    </nav>
+  </div>
+
+  <!-- MAIN PANEL -->
+  <div id="main">
+
+    <!-- SCENE 0: DASHBOARD -->
+    <div class="scene active zoom-in" id="scene-dashboard">
+      <div class="scene-header">
+        <div class="scene-eyebrow">Good morning, Alex</div>
+        <div class="scene-title">Procurement Dashboard</div>
+        <div class="scene-sub">Tuesday, 14 January 2025 · Operations Team</div>
+      </div>
+      <div class="grid4" style="margin-bottom:16px;">
+        <div class="card card-sm fade-in">
+          <div class="card-label">Open Requests</div>
+          <div class="card-value" style="color:var(--blue-dim)">12</div>
+          <div class="card-delta">↑ 3 new today</div>
+        </div>
+        <div class="card card-sm fade-in-delay-1">
+          <div class="card-label">Pending Approval</div>
+          <div class="card-value" style="color:var(--amber-dim)">4</div>
+          <div class="card-delta">Avg 1.2 days</div>
+        </div>
+        <div class="card card-sm fade-in-delay-2">
+          <div class="card-label">Active POs</div>
+          <div class="card-value" style="color:var(--teal-light)">28</div>
+          <div class="card-delta">$142K outstanding</div>
+        </div>
+        <div class="card card-sm fade-in-delay-3">
+          <div class="card-label">Savings YTD</div>
+          <div class="card-value" style="color:#AFA9EC">$34K</div>
+          <div class="card-delta">↑ 12% vs target</div>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="card fade-in-delay-2">
+          <div style="font-size:12px;font-weight:500;color:var(--text-primary);margin-bottom:14px;">Spend by Category — Q3</div>
+          <div class="chart-wrap" id="dash-chart">
+            <div class="bar-col"><div class="bar" style="height:55%;background:var(--blue)"></div><div class="bar-lbl">IT</div></div>
+            <div class="bar-col"><div class="bar" style="height:80%;background:var(--teal)"></div><div class="bar-lbl">Ops</div></div>
+            <div class="bar-col"><div class="bar" style="height:40%;background:var(--blue)"></div><div class="bar-lbl">HR</div></div>
+            <div class="bar-col"><div class="bar" style="height:65%;background:var(--teal)"></div><div class="bar-lbl">Mfg</div></div>
+            <div class="bar-col"><div class="bar" style="height:30%;background:var(--blue)"></div><div class="bar-lbl">Fin</div></div>
+            <div class="bar-col"><div class="bar" style="height:48%;background:var(--blue)"></div><div class="bar-lbl">Mkt</div></div>
+          </div>
+        </div>
+        <div class="card fade-in-delay-3">
+          <div style="font-size:12px;font-weight:500;color:var(--text-primary);margin-bottom:14px;">Recent Activity</div>
+          <table class="tbl">
+            <thead><tr><th>PR #</th><th>Item</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>2845</td><td>Laptop Stands ×6</td><td><span class="badge badge-teal">Approved</span></td></tr>
+              <tr><td>2846</td><td>Printer Ink</td><td><span class="badge badge-amber">Pending</span></td></tr>
+              <tr class="highlight"><td>2847</td><td>Ergonomic Chairs ×12</td><td><span class="badge badge-blue">Draft</span></td></tr>
+            </tbody>
+          </table>
+          <div style="margin-top:14px">
+            <button class="btn btn-primary" id="btn-new-request">+ New Request</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 1: PURCHASE REQUEST FORM -->
+    <div class="scene" id="scene-request">
+      <div class="scene-header">
+        <div class="scene-eyebrow">Purchase Requests</div>
+        <div class="scene-title">New Purchase Request</div>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-dot active">1</div><span class="step-label active">Request</span></div>
+        <div class="step-line"></div>
+        <div class="step"><div class="step-dot pending">2</div><span class="step-label">Approval</span></div>
+        <div class="step-line"></div>
+        <div class="step"><div class="step-dot pending">3</div><span class="step-label">Vendor</span></div>
+        <div class="step-line"></div>
+        <div class="step"><div class="step-dot pending">4</div><span class="step-label">PO</span></div>
+        <div class="step-line"></div>
+        <div class="step"><div class="step-dot pending">5</div><span class="step-label">Invoice</span></div>
+        <div class="step-line"></div>
+        <div class="step"><div class="step-dot pending">6</div><span class="step-label">Complete</span></div>
+      </div>
+      <div class="grid2">
+        <div class="card">
+          <div class="field">
+            <div class="field-label">Item / Service description</div>
+            <div class="field-input filled" id="req-item">Ergonomic Office Chairs<span class="typing-cursor" id="req-cursor"></span></div>
+          </div>
+          <div class="grid2">
+            <div class="field">
+              <div class="field-label">Quantity</div>
+              <div class="field-input filled">12</div>
+            </div>
+            <div class="field">
+              <div class="field-label">Estimated unit cost</div>
+              <div class="field-input filled">$700.00</div>
+            </div>
+          </div>
+          <div class="field">
+            <div class="field-label">Budget code</div>
+            <div class="field-input filled">OPS-2024-Q3 <span class="badge badge-teal" style="font-size:9px">✓ Valid</span></div>
+          </div>
+          <div class="field">
+            <div class="field-label">Priority</div>
+            <div class="field-input filled" style="display:flex;align-items:center;gap:8px;"><span class="badge badge-amber">High</span></div>
+          </div>
+          <div class="field">
+            <div class="field-label">Business justification</div>
+            <div class="field-input filled" style="height:48px;display:flex;align-items:flex-start;padding-top:8px;font-size:11px">Replacement cycle for remote operations team — ergonomic compliance audit.</div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:4px">
+            <button class="btn btn-primary" id="btn-submit-request">Submit Request →</button>
+            <button class="btn btn-ghost">Save Draft</button>
+          </div>
+        </div>
+        <div class="card" style="display:flex;flex-direction:column;gap:12px;">
+          <div style="font-size:12px;font-weight:500;color:var(--text-primary)">Request Summary</div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;padding:8px 0;border-bottom:1px solid var(--border)"><span style="color:var(--text-muted)">Total estimate</span><span style="color:var(--teal-light);font-weight:600;font-size:16px">$8,400.00</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0"><span style="color:var(--text-muted)">Budget remaining</span><span>$24,600</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0"><span style="color:var(--text-muted)">Approval route</span><span>Finance → Director</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0"><span style="color:var(--text-muted)">Policy check</span><span class="badge badge-teal">Passed</span></div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;padding:4px 0"><span style="color:var(--text-muted)">Assigned PR #</span><span style="color:var(--blue-dim)">PR-2847</span></div>
+          <div class="card" style="background:rgba(29,158,117,0.08);border-color:rgba(29,158,117,0.3);margin-top:auto;">
+            <div style="font-size:10px;color:var(--teal-light);font-weight:500">✓ Ready to submit</div>
+            <div style="font-size:10px;color:var(--text-secondary);margin-top:2px">All required fields complete. Budget validated.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 2: APPROVAL -->
+    <div class="scene" id="scene-approval">
+      <div class="scene-header">
+        <div class="scene-eyebrow">Approvals</div>
+        <div class="scene-title">PR-2847 — Pending Your Approval</div>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-dot done">✓</div><span class="step-label">Request</span></div>
+        <div class="step-line done"></div>
+        <div class="step"><div class="step-dot active">2</div><span class="step-label active">Approval</span></div>
+        <div class="step-line"></div>
+        <div class="step"><div class="step-dot pending">3</div><span class="step-label">Vendor</span></div>
+        <div class="step-line"></div>
+        <div class="step"><div class="step-dot pending">4</div><span class="step-label">PO</span></div>
+        <div class="step-line"></div>
+        <div class="step"><div class="step-dot pending">5</div><span class="step-label">Invoice</span></div>
+        <div class="step-line"></div>
+        <div class="step"><div class="step-dot pending">6</div><span class="step-label">Complete</span></div>
+      </div>
+      <div class="grid2">
+        <div class="card fade-in">
+          <div style="font-size:12px;font-weight:500;color:var(--text-primary);margin-bottom:14px">Request details</div>
+          <table class="tbl">
+            <tbody>
+              <tr><td style="color:var(--text-muted)">Requested by</td><td>Sarah Chen, Operations</td></tr>
+              <tr><td style="color:var(--text-muted)">Item</td><td>Ergonomic Chairs × 12</td></tr>
+              <tr><td style="color:var(--text-muted)">Total value</td><td style="color:var(--teal-light);font-weight:500">$8,400.00</td></tr>
+              <tr><td style="color:var(--text-muted)">Budget code</td><td>OPS-2024-Q3</td></tr>
+              <tr><td style="color:var(--text-muted)">Budget remaining</td><td>$24,600</td></tr>
+              <tr><td style="color:var(--text-muted)">Policy check</td><td><span class="badge badge-teal">Passed ✓</span></td></tr>
+              <tr><td style="color:var(--text-muted)">Urgency</td><td><span class="badge badge-amber">High</span></td></tr>
+            </tbody>
+          </table>
+          <div style="font-size:11px;color:var(--text-secondary);margin-top:10px;padding:10px;background:var(--surface2);border-radius:6px;line-height:1.5">
+            "Replacement cycle for remote ops team — ergonomic compliance audit Q3."
+          </div>
+        </div>
+        <div class="card fade-in-delay-1">
+          <div style="font-size:12px;font-weight:500;color:var(--text-primary);margin-bottom:14px">Approval chain</div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px">
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(29,158,117,0.08);border-radius:6px;border:1px solid rgba(29,158,117,0.2)">
+              <div style="width:28px;height:28px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#fff">SC</div>
+              <div style="flex:1"><div style="font-size:11px;color:var(--text-primary)">Sarah Chen</div><div style="font-size:10px;color:var(--text-muted)">Requester · Submitted 09:42 AM</div></div>
+              <span class="badge badge-teal">✓</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:rgba(24,95,165,0.1);border-radius:6px;border:1px solid rgba(24,95,165,0.3)">
+              <div style="width:28px;height:28px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#fff">AK</div>
+              <div style="flex:1"><div style="font-size:11px;color:var(--text-primary)">Alex Kumar</div><div style="font-size:10px;color:var(--text-muted)">Finance Manager · Awaiting</div></div>
+              <span class="badge badge-blue">You</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--surface);border-radius:6px;border:1px solid var(--border)">
+              <div style="width:28px;height:28px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:var(--text-muted)">DL</div>
+              <div style="flex:1"><div style="font-size:11px;color:var(--text-secondary)">Diana Lee</div><div style="font-size:10px;color:var(--text-muted)">Director · Waiting</div></div>
+              <span class="badge" style="background:var(--surface2);color:var(--text-muted)">Pending</span>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:auto">
+            <button class="btn btn-success" id="btn-approve" style="flex:1">✓ Approve</button>
+            <button class="btn btn-danger-ghost">Reject</button>
+            <button class="btn btn-ghost">Escalate</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 3: VENDOR SELECTION -->
+    <div class="scene" id="scene-vendor">
+      <div class="scene-header">
+        <div class="scene-eyebrow">Vendor Selection · PR-2847</div>
+        <div class="scene-title">Recommended Vendors</div>
+        <div class="scene-sub">3 pre-approved vendors matched · Ranked by price, lead time &amp; performance</div>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-dot done">✓</div><span class="step-label">Request</span></div>
+        <div class="step-line done"></div>
+        <div class="step"><div class="step-dot done">✓</div><span class="step-label">Approval</span></div>
+        <div class="step-line done"></div>
+        <div class="step"><div class="step-dot active">3</div><span class="step-label active">Vendor</span></div>
+        <div class="step-line"></div>
+        <div class="step"><div class="step-dot pending">4</div><span class="step-label">PO</span></div>
+        <div class="step-line"></div>
+        <div class="step"><div class="step-dot pending">5</div><span class="step-label">Invoice</span></div>
+        <div class="step-line"></div>
+        <div class="step"><div class="step-dot pending">6</div><span class="step-label">Complete</span></div>
+      </div>
+      <div class="grid3" style="margin-bottom:14px">
+        <div class="vendor-card selected fade-in" id="vendor1">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <div>
+              <div style="font-size:12px;font-weight:600;color:var(--text-primary)">OfficePlus Supplies</div>
+              <div style="font-size:10px;color:var(--text-muted);margin-top:2px">Preferred vendor · 3yr contract</div>
+            </div>
+            <span class="badge badge-teal">Selected ✓</span>
+          </div>
+          <div style="margin-top:12px">
+            <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px"><span style="color:var(--text-secondary)">Score</span><span style="color:var(--teal-light);font-weight:600">96 / 100</span></div>
+            <div class="vendor-score-bar"><div class="vendor-score-fill" style="width:96%"></div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;font-size:11px">
+            <div style="color:var(--text-muted)">Unit price</div><div>$695</div>
+            <div style="color:var(--text-muted)">Lead time</div><div>5 days</div>
+            <div style="color:var(--text-muted)">Rating</div><div style="color:var(--amber-dim)">★ 4.8</div>
+          </div>
+        </div>
+        <div class="vendor-card fade-in-delay-1" id="vendor2">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <div>
+              <div style="font-size:12px;font-weight:600;color:var(--text-primary)">FurniCo Direct</div>
+              <div style="font-size:10px;color:var(--text-muted);margin-top:2px">Approved vendor</div>
+            </div>
+            <span class="badge badge-blue">Option</span>
+          </div>
+          <div style="margin-top:12px">
+            <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px"><span style="color:var(--text-secondary)">Score</span><span style="font-weight:600">81 / 100</span></div>
+            <div class="vendor-score-bar"><div class="vendor-score-fill" style="width:81%;background:var(--blue)"></div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;font-size:11px">
+            <div style="color:var(--text-muted)">Unit price</div><div>$720</div>
+            <div style="color:var(--text-muted)">Lead time</div><div>8 days</div>
+            <div style="color:var(--text-muted)">Rating</div><div style="color:var(--amber-dim)">★ 4.2</div>
+          </div>
+        </div>
+        <div class="vendor-card fade-in-delay-2" id="vendor3">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <div>
+              <div style="font-size:12px;font-weight:600;color:var(--text-primary)">WorkSpace Pro</div>
+              <div style="font-size:10px;color:var(--text-muted);margin-top:2px">Approved vendor</div>
+            </div>
+            <span class="badge badge-blue">Option</span>
+          </div>
+          <div style="margin-top:12px">
+            <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px"><span style="color:var(--text-secondary)">Score</span><span style="font-weight:600">74 / 100</span></div>
+            <div class="vendor-score-bar"><div class="vendor-score-fill" style="width:74%;background:var(--blue)"></div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;font-size:11px">
+            <div style="color:var(--text-muted)">Unit price</div><div>$685</div>
+            <div style="color:var(--text-muted)">Lead time</div><div>12 days</div>
+            <div style="color:var(--text-muted)">Rating</div><div style="color:var(--amber-dim)">★ 3.9</div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:8px">
+        <button class="btn btn-ghost">Compare</button>
+        <button class="btn btn-primary" id="btn-confirm-vendor">Confirm OfficePlus →</button>
+      </div>
+    </div>
+
+    <!-- SCENE 4: PURCHASE ORDER -->
+    <div class="scene" id="scene-po">
+      <div class="scene-header">
+        <div class="scene-eyebrow">Purchase Orders</div>
+        <div class="scene-title">PO-2024-0892 — Generated</div>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-dot done">✓</div><span class="step-label">Request</span></div>
+        <div class="step-line done"></div>
+        <div class="step"><div class="step-dot done">✓</div><span class="step-label">Approval</span></div>
+        <div class="step-line done"></div>
+        <div class="step"><div class="step-dot done">✓</div><span class="step-label">Vendor</span></div>
+        <div class="step-line done"></div>
+        <div class="step"><div class="step-dot active">4</div><span class="step-label active">PO</span></div>
+        <div class="step-line"></div>
+        <div class="step"><div class="step-dot pending">5</div><span class="step-label">Invoice</span></div>
+        <div class="step-line"></div>
+        <div class="step"><div class="step-dot pending">6</div><span class="step-label">Complete</span></div>
+      </div>
+      <div class="grid2">
+        <div class="card fade-in">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+            <div style="font-size:12px;font-weight:500;color:var(--text-primary)">Purchase Order</div>
+            <span class="badge badge-teal">Sent to Vendor ✓</span>
+          </div>
+          <table class="tbl">
+            <tbody>
+              <tr><td style="color:var(--text-muted)">PO Number</td><td style="color:var(--blue-dim);font-weight:500">PO-2024-0892</td></tr>
+              <tr><td style="color:var(--text-muted)">Vendor</td><td>OfficePlus Supplies</td></tr>
+              <tr><td style="color:var(--text-muted)">Vendor email</td><td style="font-size:11px">orders@officeplus.com</td></tr>
+              <tr><td style="color:var(--text-muted)">Raised by</td><td>Sarah Chen</td></tr>
+              <tr><td style="color:var(--text-muted)">Date issued</td><td>14 Jan 2025, 09:58 AM</td></tr>
+              <tr><td style="color:var(--text-muted)">Payment terms</td><td>Net 30</td></tr>
+              <tr><td style="color:var(--text-muted)">Delivery ETA</td><td>21 Jan 2025</td></tr>
+            </tbody>
+          </table>
+          <div style="margin-top:14px;border-top:1px solid var(--border);padding-top:14px">
+            <table class="tbl">
+              <thead><tr><th>Item</th><th>Qty</th><th>Unit</th><th>Total</th></tr></thead>
+              <tbody>
+                <tr class="highlight"><td>Ergonomic Chair</td><td>12</td><td>$695</td><td style="color:var(--teal-light);font-weight:500">$8,340</td></tr>
+                <tr><td colspan="3" style="color:var(--text-muted);text-align:right">Delivery</td><td>$60</td></tr>
+                <tr><td colspan="3" style="color:var(--text-primary);font-weight:500;text-align:right">Total</td><td style="color:var(--teal-light);font-weight:600;font-size:14px">$8,400</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card fade-in-delay-1" style="display:flex;flex-direction:column;gap:12px">
+          <div style="font-size:12px;font-weight:500;color:var(--text-primary)">PO Status</div>
+          <div class="status-flow">
+            <span class="status-node complete">Draft</span>
+            <span class="status-arrow">→</span>
+            <span class="status-node complete">Approved</span>
+            <span class="status-arrow">→</span>
+            <span class="status-node current">Sent</span>
+            <span class="status-arrow">→</span>
+            <span class="status-node">Acknowledged</span>
+            <span class="status-arrow">→</span>
+            <span class="status-node">Delivered</span>
+          </div>
+          <div class="card" style="background:rgba(29,158,117,0.08);border-color:rgba(29,158,117,0.3);margin-top:4px">
+            <div style="font-size:10px;color:var(--teal-light);font-weight:500">✓ PO emailed to vendor</div>
+            <div style="font-size:10px;color:var(--text-secondary);margin-top:2px">Sent 09:58 AM · Ref PO-2024-0892</div>
+          </div>
+          <div style="font-size:11px;font-weight:500;color:var(--text-primary);margin-top:4px">Audit trail</div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="font-size:10px;color:var(--text-secondary);display:flex;gap:8px"><span style="color:var(--text-muted)">09:42</span>PR created by Sarah Chen</div>
+            <div style="font-size:10px;color:var(--text-secondary);display:flex;gap:8px"><span style="color:var(--text-muted)">09:51</span>Approved by Alex Kumar (Finance)</div>
+            <div style="font-size:10px;color:var(--text-secondary);display:flex;gap:8px"><span style="color:var(--text-muted)">09:55</span>OfficePlus selected as vendor</div>
+            <div style="font-size:10px;color:var(--teal-light);display:flex;gap:8px"><span style="color:var(--teal)">09:58</span>PO-2024-0892 issued &amp; sent</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 5: INVOICE MATCHING -->
+    <div class="scene" id="scene-invoice">
+      <div class="scene-header">
+        <div class="scene-eyebrow">Invoice Matching · INV-OFP-8821</div>
+        <div class="scene-title">3-Way Match — Automated</div>
+        <div class="scene-sub">PO · Goods Receipt · Invoice matched against <strong style="color:var(--teal-light)">94.3%</strong> — 1 exception flagged</div>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-dot done">✓</div><span class="step-label">Request</span></div>
+        <div class="step-line done"></div>
+        <div class="step"><div class="step-dot done">✓</div><span class="step-label">Approval</span></div>
+        <div class="step-line done"></div>
+        <div class="step"><div class="step-dot done">✓</div><span class="step-label">Vendor</span></div>
+        <div class="step-line done"></div>
+        <div class="step"><div class="step-dot done">✓</div><span class="step-label">PO</span></div>
+        <div class="step-line done"></div>
+        <div class="step"><div class="step-dot active">5</div><span class="step-label active">Invoice</span></div>
+        <div class="step-line"></div>
+        <div class="step"><div class="step-dot pending">6</div><span class="step-label">Complete</span></div>
+      </div>
+      <div class="grid2">
+        <div class="card fade-in">
+          <div style="font-size:12px;font-weight:500;color:var(--text-primary);margin-bottom:12px">Line-by-line match</div>
+          <div class="match-row matched">
+            <span style="font-size:11px;color:var(--text-primary)">Ergonomic Chair × 12</span>
+            <span class="match-status match-ok">✓ Matched — $8,340</span>
+          </div>
+          <div class="match-row matched">
+            <span style="font-size:11px;color:var(--text-primary)">Payment terms (Net 30)</span>
+            <span class="match-status match-ok">✓ Matched</span>
+          </div>
+          <div class="match-row matched">
+            <span style="font-size:11px;color:var(--text-primary)">Goods received qty</span>
+            <span class="match-status match-ok">✓ 12 of 12</span>
+          </div>
+          <div class="match-row flagged">
+            <span style="font-size:11px;color:var(--text-primary)">Delivery charge</span>
+            <span class="match-status match-warn">⚠ Variance $40</span>
+          </div>
+          <div style="margin-top:12px;padding:10px;background:rgba(239,159,39,0.07);border-radius:6px;border:1px solid rgba(239,159,39,0.2)">
+            <div style="font-size:10px;color:var(--amber-dim);font-weight:500">⚠ Exception: delivery surcharge</div>
+            <div style="font-size:10px;color:var(--text-secondary);margin-top:2px">PO: $60 · Invoice: $100 · Difference: +$40. Assign to cost centre or reject line?</div>
+            <div style="display:flex;gap:6px;margin-top:8px">
+              <button class="btn btn-ghost" style="font-size:11px;height:28px;padding:0 12px">Accept & Assign</button>
+              <button class="btn btn-danger-ghost" style="font-size:11px;height:28px;padding:0 12px">Dispute</button>
+            </div>
+          </div>
+        </div>
+        <div class="card fade-in-delay-1">
+          <div style="font-size:12px;font-weight:500;color:var(--text-primary);margin-bottom:12px">Invoice summary</div>
+          <table class="tbl" style="margin-bottom:14px">
+            <tbody>
+              <tr><td style="color:var(--text-muted)">Invoice #</td><td style="color:var(--blue-dim)">INV-OFP-8821</td></tr>
+              <tr><td style="color:var(--text-muted)">From</td><td>OfficePlus Supplies</td></tr>
+              <tr><td style="color:var(--text-muted)">Invoice date</td><td>22 Jan 2025</td></tr>
+              <tr><td style="color:var(--text-muted)">Invoice total</td><td style="font-weight:500">$8,440</td></tr>
+              <tr><td style="color:var(--text-muted)">PO total</td><td>$8,400</td></tr>
+              <tr><td style="color:var(--text-muted)">Variance</td><td style="color:var(--amber-dim)">+$40</td></tr>
+              <tr><td style="color:var(--text-muted)">Match rate</td><td style="color:var(--teal-light);font-weight:500">94.3%</td></tr>
+            </tbody>
+          </table>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div style="font-size:10px;color:var(--text-muted)">Auto-match confidence</div>
+            <div style="height:6px;background:var(--surface2);border-radius:3px;overflow:hidden">
+              <div style="height:100%;width:94%;background:var(--teal);border-radius:3px"></div>
+            </div>
+            <div style="font-size:10px;color:var(--teal-light)">94% · 1 line requires review</div>
+          </div>
+          <div style="margin-top:14px">
+            <button class="btn btn-primary" style="width:100%" id="btn-approve-invoice">Approve for Payment →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 6: REPORTS -->
+    <div class="scene" id="scene-reports">
+      <div class="scene-header">
+        <div class="scene-eyebrow">Reports &amp; Analytics</div>
+        <div class="scene-title">Procurement Performance — Q3 2024</div>
+      </div>
+      <div class="steps">
+        <div class="step"><div class="step-dot done">✓</div><span class="step-label">Request</span></div>
+        <div class="step-line done"></div>
+        <div class="step"><div class="step-dot done">✓</div><span class="step-label">Approval</span></div>
+        <div class="step-line done"></div>
+        <div class="step"><div class="step-dot done">✓</div><span class="step-label">Vendor</span></div>
+        <div class="step-line done"></div>
+        <div class="step"><div class="step-dot done">✓</div><span class="step-label">PO</span></div>
+        <div class="step-line done"></div>
+        <div class="step"><div class="step-dot done">✓</div><span class="step-label">Invoice</span></div>
+        <div class="step-line done"></div>
+        <div class="step"><div class="step-dot done">✓</div><span class="step-label active">Complete</span></div>
+      </div>
+      <div class="grid4" style="margin-bottom:14px">
+        <div class="card card-sm fade-in">
+          <div class="card-label">Total Spend</div>
+          <div class="card-value" id="stat-spend">$284K</div>
+          <div class="card-delta">↑ 8% vs Q2</div>
+        </div>
+        <div class="card card-sm fade-in-delay-1">
+          <div class="card-label">Savings Achieved</div>
+          <div class="card-value" style="color:var(--teal-light)" id="stat-savings">$34K</div>
+          <div class="card-delta">12% of spend</div>
+        </div>
+        <div class="card card-sm fade-in-delay-2">
+          <div class="card-label">Avg Cycle Time</div>
+          <div class="card-value" style="color:var(--blue-dim)">1.8d</div>
+          <div class="card-delta">↓ 2.1 days vs last Q</div>
+        </div>
+        <div class="card card-sm fade-in-delay-3">
+          <div class="card-label">Invoice Match Rate</div>
+          <div class="card-value" style="color:var(--amber-dim)">96.2%</div>
+          <div class="card-delta">↑ 3.4pts</div>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="card fade-in-delay-2">
+          <div style="font-size:12px;font-weight:500;color:var(--text-primary);margin-bottom:14px">Monthly spend trend</div>
+          <div class="chart-wrap">
+            <div class="bar-col"><div class="bar" style="height:50%;background:var(--blue)"></div><div class="bar-lbl">Jul</div></div>
+            <div class="bar-col"><div class="bar" style="height:65%;background:var(--blue)"></div><div class="bar-lbl">Aug</div></div>
+            <div class="bar-col"><div class="bar" style="height:80%;background:var(--teal)"></div><div class="bar-lbl">Sep</div></div>
+            <div class="bar-col"><div class="bar" style="height:55%;background:var(--blue)"></div><div class="bar-lbl">Oct</div></div>
+            <div class="bar-col"><div class="bar" style="height:70%;background:var(--teal)"></div><div class="bar-lbl">Nov</div></div>
+            <div class="bar-col"><div class="bar" style="height:90%;background:var(--teal)"></div><div class="bar-lbl">Dec</div></div>
+          </div>
+        </div>
+        <div class="card fade-in-delay-3">
+          <div style="font-size:12px;font-weight:500;color:var(--text-primary);margin-bottom:14px">Top savings categories</div>
+          <table class="tbl">
+            <thead><tr><th>Category</th><th>Saved</th><th>% of total</th></tr></thead>
+            <tbody>
+              <tr class="highlight"><td>Operations</td><td style="color:var(--teal-light)">$14,200</td><td>41.7%</td></tr>
+              <tr><td>IT Equipment</td><td style="color:var(--teal-light)">$9,800</td><td>28.8%</td></tr>
+              <tr><td>Facilities</td><td style="color:var(--teal-light)">$6,100</td><td>17.9%</td></tr>
+              <tr><td>Other</td><td style="color:var(--teal-light)">$3,900</td><td>11.5%</td></tr>
+            </tbody>
+          </table>
+          <div style="display:flex;gap:8px;margin-top:14px">
+            <button class="btn btn-primary">Export Report</button>
+            <button class="btn btn-ghost">Schedule</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+
+  <!-- CURSOR -->
+  <div id="cursor">
+    <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M2 2L8 16L10.5 10.5L16 8L2 2Z" fill="white" stroke="#185FA5" stroke-width="1.2"/>
+    </svg>
+  </div>
+  <div id="cursor-ripple"></div>
+
+  <!-- TOAST -->
+  <div id="toast">
+    <div class="toast-title" id="toast-title"></div>
+    <div class="toast-body" id="toast-body"></div>
+  </div>
+
+  <!-- STORYBOARD CARD -->
+  <div class="sb-card" id="sb-card">
+    <strong id="sb-scene-name"></strong>
+    <span id="sb-timing"></span>
+  </div>
+
+  <!-- SCENE LABEL -->
+  <div id="scene-label">
+    <div id="scene-tag">
+      <span id="scene-name-tag">Dashboard</span>
+      <div id="progress-dots"></div>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div id="timeline"><div id="timeline-fill"></div></div>
+
+  <!-- CAPTION BAR -->
+  <div id="caption-bar">
+    <div id="voiceover-text"></div>
+  </div>
+
+  <!-- PLAY OVERLAY -->
+  <div id="play-overlay">
+    <div class="overlay-logo">IVA Procure</div>
+    <div class="overlay-sub">Enterprise Procurement Platform</div>
+    <button class="play-btn" id="playBtn">
+      <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+    </button>
+    <div class="overlay-hint">Click to start the demo · 90 seconds</div>
+  </div>
+
+</div><!-- /stage -->
+
+<script>
+const TOTAL_DURATION = 88000;
+
+const scenes = [
+  {
+    id: 'dashboard', name: 'Dashboard', nav: 'dashboard', time: '0:00 – 0:12', duration: 12000,
+    vo: 'Welcome to IVA Procure — your end-to-end procurement platform. Every request, approval, and invoice in one place.',
+    cursor: { x: 640, y: 480 }, action: 'scan'
+  },
+  {
+    id: 'request', name: 'Purchase Request', nav: 'requests', time: '0:12 – 0:26', duration: 14000,
+    vo: 'Any team member can raise a purchase request in seconds — item, quantity, budget code, and justification — all validated in real time.',
+    cursor: { x: 560, y: 560 }, action: 'submit'
+  },
+  {
+    id: 'approval', name: 'Approval', nav: 'approvals', time: '0:26 – 0:40', duration: 14000,
+    vo: 'IVA Procure routes requests through your approval chain automatically. Approvers get full context instantly — no email chains. One click to approve.',
+    cursor: { x: 820, y: 590 }, action: 'approve'
+  },
+  {
+    id: 'vendor', name: 'Vendor Selection', nav: 'vendors', time: '0:40 – 0:54', duration: 14000,
+    vo: 'With approval secured, the platform surfaces pre-approved vendors — scored by price, lead time, and performance history.',
+    cursor: { x: 450, y: 420 }, action: 'select'
+  },
+  {
+    id: 'po', name: 'Purchase Order', nav: 'orders', time: '0:54 – 1:07', duration: 13000,
+    vo: 'A compliant purchase order is auto-generated and sent to the supplier instantly — pre-populated, timestamped, and logged.',
+    cursor: { x: 640, y: 400 }, action: 'view'
+  },
+  {
+    id: 'invoice', name: 'Invoice Matching', nav: 'invoices', time: '1:07 – 1:22', duration: 15000,
+    vo: 'When the invoice arrives, automated 3-way matching clears matched lines instantly. Exceptions are flagged for review — no manual reconciliation.',
+    cursor: { x: 640, y: 580 }, action: 'match'
+  },
+  {
+    id: 'reports', name: 'Reports', nav: 'reports', time: '1:22 – 1:28', duration: 6000,
+    vo: 'Full visibility into spend, savings, and cycle times — so your team procures smarter, every quarter.',
+    cursor: { x: 640, y: 450 }, action: 'view'
+  }
+];
+
+let currentScene = -1;
+let elapsed = 0;
+let startTime = null;
+let rafId = null;
+let isPlaying = false;
+
+const cursor = document.getElementById('cursor');
+const ripple = document.getElementById('cursor-ripple');
+const voText = document.getElementById('voiceover-text');
+const toast = document.getElementById('toast');
+const sbCard = document.getElementById('sb-card');
+const timelineFill = document.getElementById('timeline-fill');
+const progressDots = document.getElementById('progress-dots');
+const sceneNameTag = document.getElementById('scene-name-tag');
+
+// Build progress dots
+scenes.forEach((_,i) => {
+  const d = document.createElement('div');
+  d.className = 'pdot'; d.id = `pdot-${i}`;
+  progressDots.appendChild(d);
+});
+
+function setCursor(x, y) {
+  cursor.style.left = x + 'px';
+  cursor.style.top = y + 'px';
+  ripple.style.left = x + 'px';
+  ripple.style.top = y + 'px';
+}
+
+function click(x, y) {
+  setCursor(x, y);
+  setTimeout(() => {
+    cursor.classList.add('clicking');
+    ripple.classList.remove('rippling');
+    void ripple.offsetWidth;
+    ripple.classList.add('rippling');
+    setTimeout(() => cursor.classList.remove('clicking'), 200);
+  }, 300);
+}
+
+function showToast(title, body, duration = 2500) {
+  document.getElementById('toast-title').textContent = title;
+  document.getElementById('toast-body').textContent = body;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), duration);
+}
+
+function activateNav(navId) {
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  const el = document.querySelector(`[data-nav="${navId}"]`);
+  if (el) el.classList.add('active');
+}
+
+function activateScene(idx) {
+  if (idx === currentScene) return;
+  const prev = currentScene;
+  currentScene = idx;
+  const s = scenes[idx];
+
+  // Hide all scenes
+  document.querySelectorAll('.scene').forEach(el => {
+    el.classList.remove('active');
+    el.style.animation = '';
+  });
+  // Show current
+  const sceneEl = document.getElementById('scene-' + s.id);
+  if (sceneEl) {
+    sceneEl.classList.add('active');
+    sceneEl.style.animation = 'fadeInUp 0.4s ease forwards';
+  }
+
+  activateNav(s.nav);
+  voText.style.opacity = 0;
+  setTimeout(() => {
+    voText.textContent = s.vo;
+    voText.style.opacity = 1;
+  }, 300);
+
+  // Update scene label
+  sceneNameTag.textContent = s.name;
+  document.querySelectorAll('.pdot').forEach((d, i) => {
+    d.className = 'pdot' + (i < idx ? ' done' : i === idx ? ' active' : '');
+  });
+
+  // Show storyboard card
+  document.getElementById('sb-scene-name').textContent = `Scene ${idx+1}: ${s.name}`;
+  document.getElementById('sb-timing').textContent = s.time;
+  sbCard.classList.remove('show');
+  setTimeout(() => sbCard.classList.add('show'), 400);
+  setTimeout(() => sbCard.classList.remove('show'), 3000);
+
+  // Scene-specific cursor animations
+  setTimeout(() => {
+    if (idx === 0) {
+      // Dashboard scan — drift across metrics
+      setCursor(400, 340);
+      setTimeout(() => setCursor(600, 340), 600);
+      setTimeout(() => setCursor(800, 340), 1200);
+      setTimeout(() => { click(700, 530); showToast('PR-2847 ready', 'Ergonomic Chairs ×12 — draft'); }, 2000);
+      setTimeout(() => { click(510, 552); }, 5000);
+    }
+    if (idx === 1) {
+      // Fill form then submit
+      setCursor(500, 390);
+      setTimeout(() => click(500, 390), 400);
+      setTimeout(() => click(500, 430), 1500);
+      setTimeout(() => click(500, 480), 2500);
+      setTimeout(() => { click(510, 560); showToast('Submitting request…', 'Validating budget code OPS-2024-Q3'); }, 5000);
+      setTimeout(() => showToast('PR-2847 submitted!', 'Routed to Finance Manager for approval', 3000), 7000);
+    }
+    if (idx === 2) {
+      // Review then click approve
+      setCursor(600, 420);
+      setTimeout(() => setCursor(600, 480), 800);
+      setTimeout(() => setCursor(600, 540), 1600);
+      setTimeout(() => { click(660, 590); }, 4000);
+      setTimeout(() => showToast('PR-2847 approved ✓', 'Forwarded to Director · Audit logged', 3000), 4500);
+    }
+    if (idx === 3) {
+      // Hover vendor 1, click confirm
+      setCursor(340, 390);
+      setTimeout(() => setCursor(340, 420), 500);
+      setTimeout(() => setCursor(550, 390), 1500);
+      setTimeout(() => click(340, 420), 2500);
+      setTimeout(() => { click(820, 610); showToast('OfficePlus confirmed', 'Generating PO-2024-0892…', 2500); }, 5500);
+    }
+    if (idx === 4) {
+      // Review PO
+      setCursor(500, 420);
+      setTimeout(() => setCursor(500, 460), 800);
+      setTimeout(() => setCursor(500, 500), 1600);
+      setTimeout(() => setCursor(900, 420), 2800);
+      setTimeout(() => showToast('PO sent ✓', 'PO-2024-0892 emailed to OfficePlus', 3000), 3500);
+    }
+    if (idx === 5) {
+      // Watch match lines
+      setCursor(500, 450);
+      setTimeout(() => setCursor(500, 490), 800);
+      setTimeout(() => setCursor(500, 530), 1600);
+      setTimeout(() => setCursor(500, 570), 2400);
+      setTimeout(() => { click(820, 608); showToast('Approved for payment', '$8,440 queued · Exception noted', 3000); }, 6000);
+    }
+    if (idx === 6) {
+      // Dashboard scan
+      setCursor(400, 380);
+      setTimeout(() => setCursor(600, 380), 600);
+      setTimeout(() => setCursor(800, 380), 1200);
+      setTimeout(() => setCursor(700, 540), 2000);
+    }
+  }, 200);
+}
+
+function tick(ts) {
+  if (!startTime) startTime = ts;
+  elapsed = ts - startTime;
+  const pct = Math.min(elapsed / TOTAL_DURATION * 100, 100);
+  timelineFill.style.width = pct + '%';
+
+  // Determine which scene
+  let acc = 0;
+  for (let i = 0; i < scenes.length; i++) {
+    acc += scenes[i].duration;
+    if (elapsed < acc) {
+      if (currentScene !== i) activateScene(i);
+      break;
+    }
+  }
+
+  if (elapsed < TOTAL_DURATION) {
+    rafId = requestAnimationFrame(tick);
+  } else {
+    // End — show reports CTA
+    voText.textContent = 'IVA Procure — from request to report, every step streamlined.';
+  }
+}
+
+document.getElementById('playBtn').addEventListener('click', () => {
+  document.getElementById('play-overlay').style.display = 'none';
+  isPlaying = true;
+  setCursor(640, 400);
+  rafId = requestAnimationFrame(tick);
+});
+
+// Cursor follows mouse when not playing, for preview
+document.getElementById('stage').addEventListener('mousemove', e => {
+  if (isPlaying) return;
+  const rect = document.getElementById('stage').getBoundingClientRect();
+  setCursor(e.clientX - rect.left, e.clientY - rect.top);
+});
+
+// Initial cursor position
+setCursor(640, 400);
+</script>
+</body>
+</html>

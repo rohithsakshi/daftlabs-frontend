@@ -1,8 +1,86 @@
 "use client";
 
-import { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
-import { BarChart3, Package, Users, Truck, FileText, Settings, Workflow } from "lucide-react";
+import { useSpring, animated } from "@react-spring/web";
+import * as Tabs from "@radix-ui/react-tabs";
+import { BarChart3, Package, Users, Truck, FileText, Settings, Workflow, Cloud, Shield } from "lucide-react";
+
+// --- Components ---
+
+const CardSpotlight = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => {
+  const divRef = useRef<HTMLDivElement>(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [opacity, setOpacity] = useState(0);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!divRef.current) return;
+    const rect = divRef.current.getBoundingClientRect();
+    setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  };
+
+  return (
+    <div
+      ref={divRef}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setOpacity(1)}
+      onMouseLeave={() => setOpacity(0)}
+      className={`relative overflow-hidden ${className}`}
+    >
+      <div
+        className="pointer-events-none absolute -inset-px transition duration-300 z-0"
+        style={{
+          opacity,
+          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(59,130,246,.12), transparent 40%)`,
+        }}
+      />
+      <div className="relative z-10 h-full flex flex-col">
+        {children}
+      </div>
+    </div>
+  );
+};
+
+const AnimatedList = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => {
+  return (
+    <div className={className}>
+      {React.Children.map(children, (child, index) => (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.5, delay: index * 0.1 }}
+        >
+          {child}
+        </motion.div>
+      ))}
+    </div>
+  );
+};
+
+const StatCounter = ({ end, label }: { end: number; label: string }) => {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true });
+  const { number } = useSpring({
+    from: { number: 0 },
+    number: inView ? end : 0,
+    delay: 200,
+    config: { mass: 1, tension: 20, friction: 10 },
+  });
+
+  return (
+    <div ref={ref} className="flex flex-col items-center">
+      <animated.div className="font-mono text-4xl md:text-5xl font-bold text-[var(--accent)] mb-1">
+        {number.to(n => n.toFixed(0))}
+      </animated.div>
+      <div className="text-[10px] text-[var(--text-muted)] tracking-widest uppercase font-semibold">
+        {label}
+      </div>
+    </div>
+  );
+};
+
+// --- Data ---
 
 const features = [
   { icon: <BarChart3 size={16} />, label: "Financial Management", desc: "Accounts, payroll, tax, and audit — automated end to end." },
@@ -20,12 +98,33 @@ export default function Products() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
+  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsDemoModalOpen(false);
+    };
+    if (isDemoModalOpen) {
+      window.addEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [isDemoModalOpen]);
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start end", "end start"],
   });
 
   const orbOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.01, 0.08, 0.01]);
+
+  const headline = "One Platform. Every Operation.";
+  const words = headline.split(" ");
 
   return (
     <section ref={containerRef} id="products" className="relative py-28 overflow-hidden">
@@ -35,96 +134,108 @@ export default function Products() {
       />
 
       <div ref={ref} className="max-w-6xl mx-auto px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
+        <div className="text-center mb-16">
           <p className="section-label mb-4">Our Products</p>
-          <h2
-            className="text-4xl md:text-5xl font-bold mb-5 text-[var(--text-primary)]"
+          
+          <motion.h2
+            className="text-4xl md:text-5xl font-bold mb-8 text-[var(--text-primary)]"
             style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={{
+              visible: { transition: { staggerChildren: 0.08 } },
+              hidden: {}
+            }}
           >
-            One Platform.{" "}
-            <span className="text-[var(--accent)]">Every Operation.</span>
-          </h2>
-          <p className="text-[var(--text-secondary)] max-w-xl mx-auto text-base">
-            Introducing DAFT ERP — a fully integrated enterprise platform
-            designed to unify your business operations under a single intelligent roof.
-          </p>
-        </motion.div>
+            {words.map((w, i) => (
+              <motion.span
+                key={i}
+                className={`inline-block mr-2 ${w.includes("Operation") ? "text-[var(--accent)]" : ""}`}
+                variants={{
+                  hidden: { opacity: 0, y: 20 },
+                  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
+                }}
+              >
+                {w}
+              </motion.span>
+            ))}
+          </motion.h2>
 
-        <div className="grid lg:grid-cols-2 gap-10 items-center">
+          {/* Stat Bar */}
+          <div className="flex items-center justify-center gap-8 md:gap-16 mb-8 w-full">
+            <StatCounter end={8} label="Modules" />
+            <div className="w-px h-12 bg-[var(--border)]"></div>
+            <StatCounter end={1} label="Platform" />
+            <div className="w-px h-12 bg-[var(--border)]"></div>
+            <StatCounter end={4} label="Weeks to Live" />
+          </div>
+
+          <p className="text-[var(--text-secondary)] max-w-2xl mx-auto text-base leading-relaxed">
+            DAFT ERP is a fully integrated, modular enterprise platform designed to unify your business operations. 
+            Built on a modern cloud-native stack, it scales effortlessly while cutting implementation time to weeks.
+          </p>
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-12 items-start">
           {/* Left: Product Info */}
           <motion.div
-            initial={{ opacity: 0, x: -50, filter: "blur(10px)" }}
-            animate={inView ? { opacity: 1, x: 0, filter: "blur(0px)" } : {}}
+            initial={{ opacity: 0, x: -30 }}
+            animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
             <div className="inline-flex items-center gap-2 bg-[var(--accent-subtle)] border border-[var(--border-accent)] rounded-full px-4 py-1.5 mb-6">
               <span className="text-xs font-semibold text-[var(--accent)] tracking-wide">DAFT ERP</span>
-              <span className="text-xs text-[var(--text-muted)]">— Enterprise Resource Planning</span>
             </div>
 
             <h3
-              className="text-3xl font-bold mb-5 leading-snug text-[var(--text-primary)]"
+              className="text-3xl font-bold mb-6 leading-snug text-[var(--text-primary)]"
               style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             >
               Business Intelligence,
               <br />
               Built Into Your Workflow
             </h3>
-            <p className="text-[var(--text-secondary)] text-sm leading-relaxed mb-6">
-              DAFT ERP is not another bloated enterprise system with a 12-month implementation
-              timeline. It&apos;s a modular, configurable platform that fits your existing
-              processes — while making them dramatically faster, more accurate, and easier to
-              manage. Built on a modern cloud-native stack, it scales with you from 10 to 10,000
-              employees.
-            </p>
+            
             <p className="text-[var(--text-secondary)] text-sm leading-relaxed mb-8">
               Every module is connected, every report is live, and every workflow can be
-              customized — without calling a developer. From the factory floor to the finance
-              team, DAFT ERP gives every stakeholder exactly what they need, exactly when they
-              need it.
+              customized. From the factory floor to the finance
+              team, DAFT ERP gives every stakeholder exactly what they need.
             </p>
 
-            <div className="flex flex-col gap-2">
-              {[
-                "Modular — adopt one module or all eight",
-                "Cloud-native with offline capability",
-                "Role-based access control & audit logs",
-                "Implementation in weeks, not months",
-              ].map((point, index) => (
-                <div key={point} className="flex items-center gap-3">
-                  <motion.svg 
-                    width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" 
-                    className="text-[var(--accent)] flex-shrink-0"
-                  >
-                    <motion.circle 
-                      cx="12" cy="12" r="10" 
-                      initial={{ pathLength: 0, opacity: 0 }} 
-                      animate={inView ? { pathLength: 1, opacity: 1 } : {}} 
-                      transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }} 
-                    />
-                    <motion.path 
-                      d="m9 12 2 2 4-4" 
-                      initial={{ pathLength: 0, opacity: 0 }} 
-                      animate={inView ? { pathLength: 1, opacity: 1 } : {}} 
-                      transition={{ duration: 0.4, delay: 0.6 + index * 0.1 }} 
-                    />
-                  </motion.svg>
-                  <motion.span 
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={inView ? { opacity: 1, x: 0 } : {}}
-                    transition={{ duration: 0.4, delay: 0.5 + index * 0.1 }}
-                    className="text-sm text-[var(--text-secondary)]"
-                  >
-                    {point}
-                  </motion.span>
+            {/* Radix Tabs */}
+            <Tabs.Root defaultValue="modular" className="w-full">
+              <Tabs.List className="flex flex-wrap gap-2 md:gap-4 border-b border-[var(--border)] mb-5 pb-0">
+                <Tabs.Trigger value="modular" className="text-sm font-medium px-1 py-2 border-b-2 border-transparent data-[state=active]:border-[var(--accent)] text-[var(--text-muted)] data-[state=active]:text-[var(--accent)] transition-all">
+                  Modular
+                </Tabs.Trigger>
+                <Tabs.Trigger value="cloud" className="text-sm font-medium px-1 py-2 border-b-2 border-transparent data-[state=active]:border-[var(--accent)] text-[var(--text-muted)] data-[state=active]:text-[var(--accent)] transition-all">
+                  Cloud-Native
+                </Tabs.Trigger>
+                <Tabs.Trigger value="roles" className="text-sm font-medium px-1 py-2 border-b-2 border-transparent data-[state=active]:border-[var(--accent)] text-[var(--text-muted)] data-[state=active]:text-[var(--accent)] transition-all">
+                  Security
+                </Tabs.Trigger>
+              </Tabs.List>
+              
+              <Tabs.Content value="modular" className="text-sm text-[var(--text-secondary)] leading-relaxed min-h-[60px]">
+                <div className="flex gap-3 items-start">
+                  <Package className="text-[var(--accent)] shrink-0 mt-0.5" size={18} />
+                  <p>Adopt one module or all eight. Seamlessly expand functionality as your operational needs evolve.</p>
                 </div>
-              ))}
-            </div>
+              </Tabs.Content>
+              <Tabs.Content value="cloud" className="text-sm text-[var(--text-secondary)] leading-relaxed min-h-[60px]">
+                <div className="flex gap-3 items-start">
+                  <Cloud className="text-[var(--accent)] shrink-0 mt-0.5" size={18} />
+                  <p>Reliable cloud-native infrastructure ensures global availability with robust offline capabilities.</p>
+                </div>
+              </Tabs.Content>
+              <Tabs.Content value="roles" className="text-sm text-[var(--text-secondary)] leading-relaxed min-h-[60px]">
+                <div className="flex gap-3 items-start">
+                  <Shield className="text-[var(--accent)] shrink-0 mt-0.5" size={18} />
+                  <p>Enterprise-grade role-based access control combined with detailed audit logs for compliance.</p>
+                </div>
+              </Tabs.Content>
+            </Tabs.Root>
 
             <a
               href="#contact"
@@ -135,35 +246,26 @@ export default function Products() {
             </a>
           </motion.div>
 
-          {/* Right: Feature Grid with Waterfall cascade */}
-          <div className="grid grid-cols-2 gap-3 relative z-10">
-            {features.map((f, i) => {
-              const row = Math.floor(i / 2);
-              const col = i % 2;
-              const delay = 0.2 + (row + col) * 0.12;
-
-              return (
-                <motion.div
-                  key={f.label}
-                  initial={{ opacity: 0, y: 30, scale: 0.9 }}
-                  animate={inView ? { opacity: 1, y: 0, scale: 1 } : {}}
-                  transition={{ duration: 0.5, delay, type: "spring", stiffness: 100, damping: 15 }}
-                  className="bg-[var(--surface-primary)] border border-[var(--border)] rounded-xl p-4 group hover:bg-[var(--surface-hover)] hover:border-[var(--border-hover)] transition-all duration-300 cursor-default"
-                >
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="text-[var(--accent)]">{f.icon}</span>
-                    <span
-                      className="text-xs font-semibold text-[var(--text-primary)] group-hover:text-[var(--accent)] transition-colors duration-200"
-                      style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-                    >
-                      {f.label}
-                    </span>
-                  </div>
-                  <p className="text-[var(--text-muted)] text-xs leading-relaxed">{f.desc}</p>
-                </motion.div>
-              );
-            })}
-          </div>
+          {/* Right: Feature Grid with AnimatedList and CardSpotlight */}
+          <AnimatedList className="grid grid-cols-1 sm:grid-cols-2 gap-3 relative z-10">
+            {features.map((f, i) => (
+              <CardSpotlight
+                key={f.label}
+                className="bg-[var(--surface-primary)] border border-[var(--border)] rounded-xl p-4 h-full"
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-[var(--accent)]">{f.icon}</span>
+                  <span
+                    className="text-xs font-semibold text-[var(--text-primary)]"
+                    style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+                  >
+                    {f.label}
+                  </span>
+                </div>
+                <p className="text-[var(--text-muted)] text-xs leading-relaxed">{f.desc}</p>
+              </CardSpotlight>
+            ))}
+          </AnimatedList>
         </div>
 
         {/* New Product Card: IVA Procure */}
@@ -183,35 +285,88 @@ export default function Products() {
               IVA Procure
             </h3>
             <p className="text-[var(--text-primary)] font-medium mb-2">
-              A procurement and purchase order management system for modern teams.
+              A procurement management platform for requests, approvals, vendors, purchase orders, invoices, and reports.
             </p>
             <p className="text-[var(--text-secondary)] text-sm leading-relaxed max-w-2xl">
-              IVA Procure helps teams manage purchase requests, approvals, vendors, purchase orders, and procurement visibility from one clean workflow.
+              IVA Procure helps teams manage purchase requests, approvals, vendors, purchase orders, invoices, and procurement visibility from one clean workflow.
             </p>
+            <div className="mt-4 flex items-center gap-2">
+              <span className="bg-blue-900/40 text-blue-300 text-[10px] uppercase tracking-wider font-bold px-2 py-1 rounded">Includes workflow walkthrough</span>
+            </div>
           </div>
           
           <div className="flex flex-col sm:flex-row items-center gap-4 shrink-0">
-            <div className="flex flex-col items-center gap-1">
-              <button 
-                onClick={() => window.open(process.env.NEXT_PUBLIC_IVA_PROCURE_DEMO_URL || "#", "_blank")}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 w-full justify-center"
-                style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-              >
-                Start Demo
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-              </button>
-              <span className="text-[10px] text-[var(--text-muted)]">Demo uses sample data only.</span>
-            </div>
-            <a 
-              href="/iva-procure"
-              className="bg-transparent hover:bg-[var(--surface-hover)] border border-[var(--border)] text-[var(--text-primary)] px-6 py-3 rounded-lg text-sm font-medium transition-all w-full text-center"
+            <button 
+              onClick={() => setIsDemoModalOpen(true)}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 w-full justify-center shadow-lg shadow-blue-500/20"
               style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             >
-              View Procurement Module
-            </a>
+              Start Demo
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 3l14 9-14 9V3z"></path></svg>
+            </button>
           </div>
         </motion.div>
       </div>
+
+      {/* Demo Modal */}
+      {isDemoModalOpen && (
+        <div 
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6"
+          aria-labelledby="modal-title" 
+          role="dialog" 
+          aria-modal="true"
+        >
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity"
+            onClick={() => setIsDemoModalOpen(false)}
+          ></div>
+          
+          {/* Modal Panel */}
+          <div className="relative bg-[#081220] border border-blue-500/30 rounded-2xl shadow-[0_0_50px_-12px_rgba(59,130,246,0.3)] w-full max-w-5xl overflow-hidden flex flex-col z-10 max-h-[90vh]">
+            {/* Header */}
+            <div className="px-6 py-4 border-b border-[rgba(255,255,255,0.08)] flex justify-between items-center bg-[#0B1727]">
+              <div>
+                <h3 id="modal-title" className="text-xl font-bold text-white mb-1" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                  IVA Procure Workflow Demo
+                </h3>
+                <p className="text-sm text-[#94A3B8]">
+                  Watch the complete procurement workflow using fictional sample data.
+                </p>
+              </div>
+              <button 
+                onClick={() => setIsDemoModalOpen(false)}
+                className="text-gray-400 hover:text-white bg-[rgba(255,255,255,0.05)] hover:bg-[rgba(255,255,255,0.1)] rounded-lg p-2 transition-colors focus:outline-none"
+              >
+                <span className="sr-only">Close</span>
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            
+            {/* Iframe Container */}
+            <div className="relative w-full aspect-video bg-[#081220]">
+              <iframe
+                src="/iva_procure_demo.html"
+                className="absolute inset-0 w-full h-full border-0"
+                allowFullScreen
+                title="IVA Procure Workflow Walkthrough"
+              />
+            </div>
+            
+            {/* Footer / Notice */}
+            <div className="px-6 py-3 bg-[#0B1727] border-t border-[rgba(255,255,255,0.08)]">
+              <p className="text-xs text-[#64748B] flex items-center gap-2">
+                <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                This walkthrough uses fictional sample data only. No real client, vendor, employee, financial, invoice, or purchase order data is displayed.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
