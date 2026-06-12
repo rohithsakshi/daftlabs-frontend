@@ -67,10 +67,8 @@ export default function Footer() {
             {/* 🔥 BRAND */}
             <motion.div variants={colVariants} className="md:col-span-2">
               <a href="#" className="flex items-center gap-3 mb-4 group" aria-label="DAFT Labs Home">
-                {/* ✅ SAME NAVBAR SVG LOGO WITH CONTINUOUS ROTATION */}
+                {/* ✅ DAFT LABS LOGO */}
                 <motion.svg
-                  animate={{ rotate: 360 }}
-                  transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
                   viewBox="0 0 200 200"
                   className="w-9 h-9"
                 >
@@ -89,10 +87,6 @@ export default function Footer() {
                     strokeLinecap="round"
                   />
                   <motion.text
-                    // Keep text upright by rotating it in reverse
-                    animate={{ rotate: -360 }}
-                    transition={{ repeat: Infinity, duration: 20, ease: "linear" }}
-                    style={{ originX: "100px", originY: "100px" }}
                     x="85"
                     y="118"
                     fontFamily="'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif"
