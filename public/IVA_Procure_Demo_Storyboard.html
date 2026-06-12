@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IVA Procure — Product Demo Video</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --navy: #050d1f;
+    --navy2: #0a1628;
+    --navy3: #0d2244;
+    --blue: #185fa5;
+    --blue-bright: #2e7dd4;
+    --blue-glow: #5ba4ff;
+    --green: #1a9e62;
+    --green-bright: #22c47a;
+    --green-glow: #5ede9a;
+    --amber: #c47a15;
+    --amber-bright: #ef9f27;
+    --red: #c0392b;
+    --white: #ffffff;
+    --white80: rgba(255,255,255,0.8);
+    --white60: rgba(255,255,255,0.6);
+    --white40: rgba(255,255,255,0.4);
+    --white20: rgba(255,255,255,0.2);
+    --white10: rgba(255,255,255,0.1);
+    --white06: rgba(255,255,255,0.06);
+    --font: 'Inter', -apple-system, sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy);
+    color: var(--white80);
+    font-family: var(--font);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── PLAYER SHELL ── */
+  .player {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 36px;
+    padding-bottom: 20px;
+    border-bottom: 0.5px solid var(--white10);
+  }
+  .logo {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: -0.03em;
+  }
+  .logo span { color: var(--blue-glow); }
+  .topbar-meta {
+    font-size: 12px;
+    color: var(--white40);
+    text-align: right;
+    line-height: 1.8;
+  }
+  .topbar-meta strong { color: var(--white60); font-weight: 500; }
+
+  /* ── HERO BANNER ── */
+  .hero {
+    background: linear-gradient(135deg, var(--navy2) 0%, var(--navy3) 50%, #0f3060 100%);
+    border: 0.5px solid var(--white10);
+    border-radius: 20px;
+    padding: 40px 44px 36px;
+    margin-bottom: 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 320px; height: 320px;
+    background: radial-gradient(circle, rgba(46,125,212,0.2) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: 30%;
+    width: 400px; height: 200px;
+    background: radial-gradient(circle, rgba(26,158,98,0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--blue-glow);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 20px; height: 2px;
+    background: var(--blue-glow);
+    border-radius: 2px;
+  }
+  .hero-title {
+    font-size: 38px;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    margin-bottom: 10px;
+  }
+  .hero-title em { color: var(--blue-glow); font-style: normal; }
+  .hero-subtitle {
+    font-size: 15px;
+    color: var(--white60);
+    margin-bottom: 28px;
+    max-width: 560px;
+    line-height: 1.7;
+  }
+  .hero-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 28px;
+  }
+  .pill {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 0.5px solid;
+  }
+  .pill-blue { color: var(--blue-glow); border-color: rgba(91,164,255,0.35); background: rgba(91,164,255,0.1); }
+  .pill-green { color: var(--green-glow); border-color: rgba(94,222,154,0.35); background: rgba(94,222,154,0.08); }
+  .pill-amber { color: var(--amber-bright); border-color: rgba(239,159,39,0.35); background: rgba(239,159,39,0.08); }
+  .pill-gray { color: var(--white60); border-color: var(--white20); background: var(--white06); }
+
+  .hero-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+  }
+  .hero-stat {
+    background: var(--white06);
+    border: 0.5px solid var(--white10);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+  .hero-stat-val {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .hero-stat-label { font-size: 11px; color: var(--white40); }
+
+  /* ── MUSIC STRIP ── */
+  .music-strip {
+    background: var(--white06);
+    border: 0.5px solid var(--white10);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 36px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .music-icon {
+    width: 36px; height: 36px;
+    background: rgba(91,164,255,0.15);
+    border: 0.5px solid rgba(91,164,255,0.3);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 16px;
+  }
+  .music-title { font-size: 12px; font-weight: 600; color: var(--white60); margin-bottom: 3px; letter-spacing: 0.03em; text-transform: uppercase; }
+  .music-desc { font-size: 12px; color: var(--white40); line-height: 1.65; }
+  .music-desc strong { color: var(--white60); font-weight: 500; }
+
+  /* ── SCENE NAV ── */
+  .scene-nav-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(5,13,31,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 0.5px solid var(--white10);
+    padding: 12px 0;
+    margin: 0 -24px 36px;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+  .scene-nav {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .scene-nav::-webkit-scrollbar { display: none; }
+  .scene-btn {
+    flex-shrink: 0;
+    font-size: 11px;
+    font-weight: 500;
+    font-family: var(--font);
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 0.5px solid var(--white20);
+    background: transparent;
+    color: var(--white40);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .scene-btn:hover { border-color: var(--blue-glow); color: var(--blue-glow); background: rgba(91,164,255,0.08); }
+  .scene-btn.active { border-color: var(--blue-glow); color: var(--white); background: rgba(91,164,255,0.18); }
+
+  /* ── SCENE CARD ── */
+  .scene-card {
+    background: var(--navy2);
+    border: 0.5px solid var(--white10);
+    border-radius: 16px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    transition: border-color 0.3s;
+    scroll-margin-top: 72px;
+  }
+  .scene-card.active { border-color: rgba(91,164,255,0.5); }
+
+  .scene-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    cursor: pointer;
+    user-select: none;
+    background: var(--navy3);
+    transition: background 0.15s;
+  }
+  .scene-header:hover { background: rgba(13,34,68,0.8); }
+
+  .scene-badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--navy);
+    background: var(--blue-glow);
+    border-radius: 4px;
+    padding: 3px 8px;
+    flex-shrink: 0;
+  }
+  .scene-phase {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--blue-glow);
+    flex-shrink: 0;
+    min-width: 110px;
+  }
+  .scene-title-text {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--white);
+    flex: 1;
+  }
+  .scene-timing {
+    font-size: 11px;
+    color: var(--white40);
+    font-family: var(--mono);
+    flex-shrink: 0;
+  }
+  .scene-chevron {
+    width: 20px; height: 20px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: transform 0.25s;
+    color: var(--white40);
+    font-size: 14px;
+  }
+  .scene-chevron.open { transform: rotate(180deg); }
+
+  .scene-body {
+    display: none;
+    border-top: 0.5px solid var(--white10);
+  }
+  .scene-body.open { display: block; }
+
+  /* ── SCENE GRID ── */
+  .scene-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+  }
+  .sg-col {
+    padding: 20px 22px;
+    border-right: 0.5px solid var(--white06);
+  }
+  .sg-col:last-child { border-right: none; }
+  .sg-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--white40);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .sg-label svg { width: 12px; height: 12px; flex-shrink: 0; }
+  .sg-text { font-size: 13px; color: var(--white60); line-height: 1.65; }
+
+  /* ── UI MOCK ── */
+  .ui-mock {
+    background: #040c1c;
+    border: 0.5px solid var(--white10);
+    border-radius: 10px;
+    margin-top: 12px;
+    overflow: hidden;
+  }
+  .ui-mock-bar {
+    background: #06101f;
+    border-bottom: 0.5px solid var(--white06);
+    padding: 7px 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .ui-mock-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+  }
+  .ui-mock-title {
+    font-size: 10px;
+    color: var(--white40);
+    font-family: var(--mono);
+    flex: 1;
+    text-align: center;
+  }
+  .ui-mock-rows { padding: 10px 12px; }
+  .ui-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 0.5px solid rgba(255,255,255,0.04);
+    gap: 12px;
+  }
+  .ui-row:last-child { border-bottom: none; }
+  .ui-row-label { font-size: 11px; color: var(--white40); font-family: var(--mono); flex-shrink: 0; }
+  .ui-row-val { font-size: 11px; font-family: var(--mono); font-weight: 500; color: var(--white60); text-align: right; }
+  .ui-row-val.green { color: var(--green-glow); }
+  .ui-row-val.amber { color: var(--amber-bright); }
+  .ui-row-val.blue { color: var(--blue-glow); }
+  .ui-row-val.red { color: #ff6b6b; }
+
+  /* ── MOTION LIST ── */
+  .motion-list { list-style: none; }
+  .motion-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--white60);
+    line-height: 1.6;
+    padding: 4px 0;
+    border-bottom: 0.5px solid rgba(255,255,255,0.04);
+  }
+  .motion-item:last-child { border-bottom: none; }
+  .motion-arrow {
+    color: var(--blue-glow);
+    flex-shrink: 0;
+    margin-top: 2px;
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .motion-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 12px; }
+  .mtag {
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 20px;
+    color: var(--blue-glow);
+    background: rgba(91,164,255,0.1);
+    border: 0.5px solid rgba(91,164,255,0.25);
+  }
+
+  /* ── VOICEOVER ── */
+  .vo-block {
+    border-top: 0.5px solid var(--white10);
+    padding: 18px 22px;
+    background: rgba(24,95,165,0.08);
+    border-left: 3px solid var(--blue);
+  }
+  .vo-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--blue-glow);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .vo-text {
+    font-size: 14px;
+    color: var(--white80);
+    line-height: 1.7;
+    font-style: italic;
+  }
+  .vo-beat {
+    display: inline-block;
+    font-size: 11px;
+    font-style: normal;
+    color: var(--blue-glow);
+    background: rgba(91,164,255,0.12);
+    border: 0.5px solid rgba(91,164,255,0.3);
+    border-radius: 4px;
+    padding: 1px 6px;
+    margin: 0 4px;
+    vertical-align: middle;
+    font-family: var(--mono);
+  }
+  .vo-caption {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 600;
+    color: var(--white);
+    background: var(--navy2);
+    border: 0.5px solid var(--white20);
+    border-radius: 6px;
+    padding: 6px 14px;
+    letter-spacing: 0.01em;
+  }
+
+  /* ── KPI GRID ── */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .kpi-card {
+    background: #040c1c;
+    border: 0.5px solid var(--white10);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .kpi-val {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--green-glow);
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .kpi-label { font-size: 10px; color: var(--white40); font-family: var(--mono); }
+
+  /* ── CLOSING BLOCK ── */
+  .closing-box {
+    background: linear-gradient(135deg, var(--navy2), #0f3060);
+    border: 0.5px solid rgba(91,164,255,0.3);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    margin-top: 12px;
+  }
+  .closing-quote {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--white);
+    line-height: 1.5;
+    margin-bottom: 14px;
+  }
+  .closing-logo {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--blue-glow);
+    letter-spacing: -0.04em;
+    margin-bottom: 4px;
+  }
+  .closing-tagline {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--white40);
+  }
+
+  /* ── TIMELINE BAR ── */
+  .global-timeline {
+    background: var(--white06);
+    border: 0.5px solid var(--white10);
+    border-radius: 12px;
+    padding: 20px 22px;
+    margin-bottom: 36px;
+  }
+  .tl-label { font-size: 11px; color: var(--white40); margin-bottom: 10px; font-weight: 500; letter-spacing: 0.03em; }
+  .tl-track {
+    height: 8px;
+    background: var(--white06);
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+  }
+  .tl-scenes { display: flex; height: 100%; }
+  .tl-seg {
+    height: 100%;
+    transition: opacity 0.2s;
+    cursor: pointer;
+  }
+  .tl-seg:hover { opacity: 0.8; }
+  .tl-ticks {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+  }
+  .tl-tick { font-size: 9px; color: var(--white40); font-family: var(--mono); }
+
+  /* ── PRINT / EXPORT NOTICE ── */
+  .export-note {
+    text-align: center;
+    font-size: 12px;
+    color: var(--white40);
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 0.5px solid var(--white10);
+  }
+  .export-note strong { color: var(--white60); font-weight: 500; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 800px) {
+    .scene-grid { grid-template-columns: 1fr; }
+    .sg-col { border-right: none; border-bottom: 0.5px solid var(--white06); }
+    .sg-col:last-child { border-bottom: none; }
+    .hero-title { font-size: 26px; }
+    .hero { padding: 28px 22px 24px; }
+    .scene-phase { display: none; }
+  }
+
+  @media print {
+    .scene-nav-wrap { display: none; }
+    .scene-body { display: block !important; }
+    .scene-chevron { display: none; }
+    .scene-card { page-break-inside: avoid; break-inside: avoid; }
+    body { background: #fff; color: #111; }
+  }
+</style>
+</head>
+<body>
+<div class="player">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="logo">IVA <span>Procure</span></div>
+    <div class="topbar-meta">
+      <strong>Product Demo — Full Storyboard</strong><br>
+      15 scenes · 90–120 sec · Enterprise SaaS
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-eyebrow">Video Production Brief</div>
+    <div class="hero-title">From Intent to Payment.<br><em>One Intelligent Platform.</em></div>
+    <div class="hero-subtitle">Apple-quality enterprise SaaS demo. Cinematic storytelling from a real procurement team's day — vendor discovery, AI quotation intelligence, approvals, and three-way matching.</div>
+    <div class="hero-pills">
+      <span class="pill pill-blue">90–120 sec runtime</span>
+      <span class="pill pill-blue">15 scenes</span>
+      <span class="pill pill-green">AI-powered narrative</span>
+      <span class="pill pill-green">Procurement Managers · CFOs · Ops Heads</span>
+      <span class="pill pill-amber">Navy + Electric Blue + Emerald palette</span>
+      <span class="pill pill-gray">Hans Zimmer–register score</span>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-val">₹29.2L</div><div class="hero-stat-label">Savings metric shown</div></div>
+      <div class="hero-stat"><div class="hero-stat-val">4.2d</div><div class="hero-stat-label">Approval cycle shown</div></div>
+      <div class="hero-stat"><div class="hero-stat-val">97%</div><div class="hero-stat-label">Vendor accuracy shown</div></div>
+      <div class="hero-stat"><div class="hero-stat-val">100%</div><div class="hero-stat-label">Invoice match rate shown</div></div>
+      <div class="hero-stat"><div class="hero-stat-val">8%</div><div class="hero-stat-label">AI cost reduction shown</div></div>
+      <div class="hero-stat"><div class="hero-stat-val">1-click</div><div class="hero-stat-label">PO generation shown</div></div>
+    </div>
+  </div>
+
+  <!-- MUSIC STRIP -->
+  <div class="music-strip">
+    <div class="music-icon">♪</div>
+    <div>
+      <div class="music-title">Score Direction</div>
+      <div class="music-desc">
+        <strong>0:00–0:10 (Scene 1):</strong> Tense ambient drone — cold, slightly dissonant. Think Nainita Desai palette. Builds unease.<br>
+        <strong>0:10–1:02 (Scenes 2–6):</strong> Clean forward-moving piano + light synth pulse. Purposeful momentum. Hans Zimmer "Interstellar" register.<br>
+        <strong>1:02–1:34 (Scenes 7–9):</strong> Orchestral swell, rising strings. The product's intelligence reveal. Tension building to insight.<br>
+        <strong>1:34–2:08 (Scenes 10–13):</strong> Confident resolution. Marimba/mallet percussion. Clean execution feeling.<br>
+        <strong>2:08–2:30 (Scenes 14–15):</strong> Full orchestral resolution — Apple Keynote outro register. Lift, confidence, arrival.<br>
+        Mix at <strong>–14 LUFS</strong>. No lyrics. Stereo, 48kHz/24-bit.
+      </div>
+    </div>
+  </div>
+
+  <!-- GLOBAL TIMELINE -->
+  <div class="global-timeline">
+    <div class="tl-label">Runtime overview — 120 sec</div>
+    <div class="tl-track"><div class="tl-scenes" id="tlSegs"></div></div>
+    <div class="tl-ticks">
+      <span class="tl-tick">0:00</span>
+      <span class="tl-tick">0:30</span>
+      <span class="tl-tick">1:00</span>
+      <span class="tl-tick">1:30</span>
+      <span class="tl-tick">2:00</span>
+      <span class="tl-tick">2:30</span>
+    </div>
+  </div>
+
+  <!-- SCENE NAV -->
+  <div class="scene-nav-wrap">
+    <div class="scene-nav" id="sceneNav"></div>
+  </div>
+
+  <!-- SCENES -->
+  <div id="scenesContainer"></div>
+
+  <div class="export-note">
+    IVA Procure — Product Demo Video Storyboard &nbsp;·&nbsp; <strong>IVA Procure Confidential</strong> &nbsp;·&nbsp; Share with video production team only<br>
+    Open in any browser · Print to PDF for offline reference · All 15 scenes included
+  </div>
+
+</div>
+
+<script>
+const SCENES = [
+  {
+    num:"01", phase:"PROBLEM", title:"The Problem",
+    timing:"0:00 – 0:10", secs:10,
+    camera:"Slow dolly into a cluttered dual-monitor desk. Warm desaturated grade — muted oranges and grays. Shallow DOF keeps the clutter impressionistic.",
+    screenTitle:"inbox / status overview",
+    rows:[
+      {l:"Inbox (unread)",v:"387 unread vendor emails",c:"red"},
+      {l:"Last PO closed",v:"23 days ago",c:"amber"},
+      {l:"Pending approvals",v:"14 overdue",c:"amber"},
+      {l:"Quote comparison",v:"Manual spreadsheet (v7)",c:"amber"},
+      {l:"Market intelligence",v:"None",c:"red"},
+    ],
+    motion:[
+      "Pain-point callout cards fly in one by one — sharp, hard entrance with THUD sound design cue on each",
+      "Cards: 'Vendor emails scattered' / 'Manual comparison' / 'Delayed approvals' / 'No market data' / 'High costs'",
+      "Each card freezes for 1.5s then dims — building a wall of problems",
+      "Final card: 'No market intelligence.' lingers 2.2s, then all cards shatter outward",
+      "Screen cuts to black. IVA Procure wordmark snaps in — electric blue. Hold 1s. Fade to Scene 2.",
+    ],
+    tags:["THUD sfx per card","desaturated warm grade","callout shatter","logo snap-in"],
+    vo:"Procurement wasn't built for how fast business moves. Emails get buried. Quotes take days. Approvals take longer. There's a better way.",
+    caption:"Procurement shouldn't take weeks.",
+  },
+  {
+    num:"02", phase:"DASHBOARD", title:"Purchase Intent Arrives",
+    timing:"0:10 – 0:22", secs:12,
+    camera:"Rack focus from blurred background to Purchase Team Dashboard. Grade lifts sharply — navy UI, crisp white text. Grade shift signals product entry.",
+    screenTitle:"purchase team dashboard",
+    rows:[
+      {l:"Module",v:"Purchase Team Dashboard",c:"blue"},
+      {l:"New intent",v:"AAC Blocks — 700 units",c:"green"},
+      {l:"Raised by",v:"Site Engineer, Coimbatore"},
+      {l:"Priority",v:"High",c:"amber"},
+      {l:"Action",v:"[ Create RFQ ]",c:"green"},
+    ],
+    motion:[
+      "Dashboard loads with staggered card entrance — 50ms delay between each card",
+      "Intent row pulses with a gentle blue ring — repeating like a heartbeat, 2 cycles",
+      "Camera push-in to the intent row as user hovers — row highlights",
+      "'Create RFQ' button shows hover state, then click ripple effect",
+      "Screen transitions via a 'wipe right' motion graphic into Scene 3",
+    ],
+    tags:["staggered card entrance","heartbeat ring","click ripple","wipe-right transition"],
+    vo:"A purchase requirement enters the system. IVA instantly transforms demand into a structured procurement workflow.",
+  },
+  {
+    num:"03", phase:"AI CREATION", title:"AI RFQ Creation",
+    timing:"0:22 – 0:34", secs:12,
+    camera:"Push-in zoom to RFQ wizard. Step progress indicator fills across 3 steps. Camera holds steady.",
+    screenTitle:"create rfq — step wizard",
+    rows:[
+      {l:"Step 1 — Materials",v:"AAC Blocks, 700 units ✓",c:"green"},
+      {l:"Step 2 — Vendors",v:"AI matching… 6 found",c:"green"},
+      {l:"Category mapped",v:"Construction > Masonry",c:"blue"},
+      {l:"Step 3 — Dispatch",v:"Ready ✓",c:"green"},
+    ],
+    motion:[
+      "Step 1: Materials auto-populate with a particle-stream animation — as if AI is reading the intent",
+      "Step 2: vendor cards fly in from the right, 6 in sequence, 120ms apart — each with a sparkle icon",
+      "Neural-net-style connecting lines briefly animate between categories and vendor types",
+      "Step 3 lights up green — progress bar fills with a smooth easing curve",
+      "Wizard shrinks into a summary card — fold animation — ready for dispatch",
+    ],
+    tags:["particle autofill","vendor fly-in","neural match lines","progress bar ease"],
+    vo:"IVA automatically identifies the procurement category and surfaces relevant, verified suppliers — no manual searching needed.",
+  },
+  {
+    num:"04", phase:"DISPATCH", title:"RFQ Dispatch",
+    timing:"0:34 – 0:42", secs:8,
+    camera:"Wide shot of RFQ summary. Camera pushes in to 'Dispatch RFQ Now' button. Holds.",
+    screenTitle:"rfq summary — dispatch",
+    rows:[
+      {l:"RFQ Number",v:"RFQ-2025-0471",c:"blue"},
+      {l:"Material",v:"AAC Blocks — 700 units"},
+      {l:"Vendors selected",v:"6 vendors shortlisted"},
+      {l:"Incl.",v:"Steelx Industries, Apex TradeCo…"},
+      {l:"Status",v:"[ Dispatch RFQ Now ]",c:"green"},
+    ],
+    motion:[
+      "Button press: 6 animated envelope icons launch from the button with velocity curves",
+      "Each envelope arcs to a different corner/edge of the screen — staggered trajectories",
+      "Small green '✓ Sent' badge appears at each destination after the arc lands",
+      "Timestamp tooltip: 'RFQ-2025-0471 · Sent to 6 vendors · 2s ago'",
+      "All badges pulse once simultaneously — a 'wave' of confirmations",
+    ],
+    tags:["envelope arc launch","trajectory curves","sent badges","confirmation pulse"],
+    vo:"With a single click, RFQs are dispatched to every shortlisted vendor simultaneously.",
+  },
+  {
+    num:"05", phase:"VENDOR PORTAL", title:"Vendor Experience",
+    timing:"0:42 – 0:52", secs:10,
+    camera:"Cut to vendor POV — their email client at 40% opacity. Quick morph transition to secure vendor portal.",
+    screenTitle:"vendor quotation portal",
+    rows:[
+      {l:"Email subject",v:"[IVA] RFQ-2025-0471 — AAC Blocks"},
+      {l:"Portal — Unit price",v:"₹465 [entered]",c:"green"},
+      {l:"Delivery days",v:"7",c:"green"},
+      {l:"Credit days",v:"30"},
+      {l:"Document upload",v:"SteelxQuote_471.pdf ✓",c:"green"},
+      {l:"Action",v:"[ Submit Quotation ]",c:"green"},
+    ],
+    motion:[
+      "Email client shown — RFQ email highlighted with a soft pulse",
+      "Click on email link → morph transition: email expands into vendor portal",
+      "Portal fields fill in sequentially with type-on animation — 80ms per character burst",
+      "PDF upload: file icon drags and drops with a smooth bounce landing",
+      "'Submit Quotation' button pressed → green checkmark burst from button center",
+    ],
+    tags:["email-to-portal morph","type-on animation","drag-drop bounce","submit burst"],
+    vo:"Suppliers receive the RFQ and submit structured quotations — directly through IVA's secure vendor portal, or by uploading their own documents.",
+  },
+  {
+    num:"06", phase:"AI PROCESSING", title:"AI Quote Ingestion",
+    timing:"0:52 – 1:02", secs:10,
+    camera:"Abstract AI processing view. Email thumbnails on left, extraction result on right. Glowing AI node at center.",
+    screenTitle:"ai email parser — auto-extraction",
+    rows:[
+      {l:"Email — Titanium Works",v:"Quote.pdf received",c:"blue"},
+      {l:"AI extracted — Price",v:"₹485 / unit",c:"green"},
+      {l:"Tax parsed",v:"GST 18% — separated",c:"green"},
+      {l:"Delivery terms",v:"10 days — captured",c:"green"},
+      {l:"Credit period",v:"45 days — captured",c:"green"},
+      {l:"Record status",v:"Auto-populated ✓",c:"green"},
+    ],
+    motion:[
+      "3 email thumbnails enter from the left — blinking envelope icon on each",
+      "Each envelope shoots a beam to the central AI node (glowing blue orb)",
+      "From the AI node, structured data fields cascade out to the right — price, tax, delivery, credit",
+      "Each field 'locks in' with a soft click animation and a green tick",
+      "Motion graphic caption: Email → AI → Structured Quote (3 icons connected by line)",
+    ],
+    tags:["beam to AI node","cascade data fields","lock-in animation","motion graphic caption"],
+    vo:"IVA reads every vendor response — email or PDF — and automatically converts unstructured data into clean, comparable procurement records.",
+  },
+  {
+    num:"07", phase:"DECISION CENTER", title:"Quotation Comparison",
+    timing:"1:02 – 1:12", secs:10,
+    camera:"Reveal pull-back to full Procurement Decision Center. Three vendor cards animate in. Wide shot.",
+    screenTitle:"procurement decision center",
+    rows:[
+      {l:"Rank #1 — Steelx Industries",v:"₹465/u · 7d · 30d credit · Score 94%",c:"green"},
+      {l:"Rank #2 — Apex TradeCo",v:"₹479/u · 9d · 15d credit · Score 81%"},
+      {l:"Rank #3 — Titanium Works",v:"₹485/u · 10d · 45d credit · Score 78%"},
+      {l:"Ranking basis",v:"Price + Lead time + Credit score"},
+      {l:"Total quotes received",v:"6 of 6",c:"green"},
+    ],
+    motion:[
+      "Camera pull-back reveals the full Decision Center — cinematic wide reveal",
+      "Three vendor cards load with staggered cascade — 80ms delay each",
+      "Rank #1 card gets a subtle gold-border glow pulse — 3 cycles",
+      "Price comparison bar chart renders — bars grow from zero with spring easing",
+      "Match score badges animate: 0% → 94%, 0% → 81%, 0% → 78% simultaneously",
+    ],
+    tags:["pull-back reveal","staggered cascade","gold glow rank1","counter animation","bar chart spring"],
+    vo:"Every quotation is normalized, scored, and ranked automatically. No spreadsheets. No manual comparison.",
+  },
+  {
+    num:"08", phase:"MARKET SCAN", title:"AI Market Intelligence",
+    timing:"1:12 – 1:22", secs:10,
+    camera:"Zoom into Market Intelligence panel. Coimbatore location tag pulses. Radar sweep visualization.",
+    screenTitle:"market intelligence — coimbatore",
+    rows:[
+      {l:"Location",v:"Coimbatore, Tamil Nadu",c:"blue"},
+      {l:"SM Steels & Tubes",v:"Est. ₹430–450/unit · Coimbatore",c:"green"},
+      {l:"H & H Iron & Steel",v:"Est. ₹455–470/unit · Coimbatore"},
+      {l:"Ritvi Steel Buildings",v:"Est. ₹448–462/unit · Coimbatore"},
+      {l:"Data freshness",v:"Live scan — last 2 hours",c:"green"},
+    ],
+    motion:[
+      "Coimbatore district map appears briefly — stylized, dark-blue lines on navy",
+      "3 vendor pins drop sequentially with a satisfying landing bounce",
+      "Radar sweep animation over the map — 2 rotations at 1.5s each",
+      "Pins unfold into vendor cards with price ranges — smooth accordion expand",
+      "Cards morph/slide into a comparison panel — smooth horizontal transition",
+    ],
+    tags:["map reveal","pin drop bounce","radar sweep","accordion expand","morph to panel"],
+    vo:'IVA doesn\'t stop at the quotes you\'ve received. <span class="vo-beat">BEAT</span> It scans the live market for additional sourcing opportunities — surfacing vendors you haven\'t yet contacted.',
+  },
+  {
+    num:"09", phase:"AI INTELLIGENCE", title:"AI Recommendation Engine",
+    timing:"1:22 – 1:34", secs:12,
+    camera:"Split-screen reveal: existing quotes left, AI market vendors right. Central comparison matrix animates in.",
+    screenTitle:"ai market vs existing quotes",
+    rows:[
+      {l:"Best existing quote",v:"₹465/unit — Steelx Industries"},
+      {l:"AI market best",v:"₹430/unit — SM Steels & Tubes",c:"green"},
+      {l:"Potential saving",v:"₹24,500 on this PO",c:"green"},
+      {l:"Confidence score",v:"87% — High confidence",c:"green"},
+      {l:"Recommendation",v:"SM Steels could reduce costs by 8%",c:"green"},
+    ],
+    motion:[
+      "Split-screen divides with a crisp vertical wipe animation",
+      "Price bars grow simultaneously on both sides — AI side visibly ends lower",
+      "Savings counter animates: ₹0 → ₹24,500 over 1.8s with ease-out",
+      "Recommendation card slides up from bottom — slight bounce on arrival",
+      "Confidence meter fills — color shifts from amber to green at 87%",
+    ],
+    tags:["vertical wipe split","price bars compare","savings counter ₹0→₹24500","recommendation bounce","confidence meter"],
+    vo:"IVA compares your received quotes against live market data and recommends the optimal sourcing strategy — with evidence.",
+  },
+  {
+    num:"10", phase:"APPROVAL", title:"Approval Workflow",
+    timing:"1:34 – 1:44", secs:10,
+    camera:"Close-up on approval recommendation card. Manager notification slides in from top.",
+    screenTitle:"recommendation — send for approval",
+    rows:[
+      {l:"Recommendation",v:"Steelx Industries (or SM Steels)"},
+      {l:"Supporting data",v:"Price · Lead time · Credit · Market"},
+      {l:"Sent to",v:"Procurement Manager — R. Krishnan",c:"blue"},
+      {l:"Notification",v:"Push + email sent ✓",c:"green"},
+      {l:"Status",v:"APPROVED ✓",c:"green"},
+    ],
+    motion:[
+      "Recommendation card renders as a clean one-page evidence summary",
+      "'Send for Approval' click → card icon flies to notification bar with arc motion",
+      "Manager notification slides in from top — avatar 'RK', timestamp",
+      "Manager taps Approve → screen flashes full-frame green checkmark burst (0.4s)",
+      "'APPROVED' badge animates onto the RFQ record with a stamp press effect",
+    ],
+    tags:["card to notification arc","manager avatar","full-frame green burst","stamp press"],
+    vo:"Decision-makers receive a complete, evidence-backed recommendation. One tap to approve.",
+  },
+  {
+    num:"11", phase:"PO CREATION", title:"Purchase Order Generated",
+    timing:"1:44 – 1:52", secs:8,
+    camera:"RFQ record morphs into PO document. Camera push-in as PO details populate.",
+    screenTitle:"purchase order — po-2025-1182",
+    rows:[
+      {l:"PO Number",v:"PO-2025-1182",c:"blue"},
+      {l:"Vendor",v:"Steelx Industries, Coimbatore"},
+      {l:"Material",v:"AAC Blocks — 700 units"},
+      {l:"PO Value",v:"₹3,25,500",c:"green"},
+      {l:"Delivery by",v:"June 19, 2025"},
+      {l:"Status",v:"Issued & dispatched ✓",c:"green"},
+    ],
+    motion:[
+      "Approved RFQ record glows briefly — then morphs into PO document with paper-fold animation",
+      "PO fields populate sequentially — each line types in at 80ms intervals",
+      "Digital stamp 'ISSUED' appears with a satisfying press motion and ink-spread effect",
+      "PO dispatched — envelope icon launches from bottom of document toward top of screen",
+    ],
+    tags:["RFQ-to-PO paper fold","sequential type-in","digital stamp press","envelope launch"],
+    vo:"The moment approval is granted, a purchase order is generated and dispatched to the vendor — automatically.",
+  },
+  {
+    num:"12", phase:"TRACKING", title:"Delivery Tracking",
+    timing:"1:52 – 2:00", secs:8,
+    camera:"Delivery timeline visualization — horizontal bar with milestone nodes. Clean, minimal.",
+    screenTitle:"delivery timeline — po-2025-1182",
+    rows:[
+      {l:"PO Issued",v:"June 12 — Confirmed ✓",c:"green"},
+      {l:"Order confirmed",v:"June 13 — Vendor confirmed ✓",c:"green"},
+      {l:"Dispatched",v:"June 14 — In transit",c:"blue"},
+      {l:"ETA",v:"June 19 — 2 days remaining",c:"amber"},
+    ],
+    motion:[
+      "Horizontal timeline bar draws itself left to right with a stroke-dashoffset animation",
+      "Milestone nodes appear and pulse as the line reaches them",
+      "Small truck icon moves along the timeline path — smooth path animation",
+      "Vendor update notification pops in from right: 'Dispatched. ETA June 19'",
+    ],
+    tags:["timeline draw animation","milestone pulse","truck path motion","vendor notification"],
+    vo:"IVA continuously tracks deliveries and keeps every stakeholder updated — no chasing vendors for status.",
+  },
+  {
+    num:"13", phase:"GRN", title:"Goods Receipt Note",
+    timing:"2:00 – 2:08", secs:8,
+    camera:"GRN form fills in. Quantity and quality checks animate. Satisfying, precise.",
+    screenTitle:"goods receipt note — grn-2025-0891",
+    rows:[
+      {l:"GRN Number",v:"GRN-2025-0891",c:"blue"},
+      {l:"Material received",v:"AAC Blocks — 700 units"},
+      {l:"Quantity match",v:"700 / 700 — Exact ✓",c:"green"},
+      {l:"Quality check",v:"Passed ✓",c:"green"},
+      {l:"Received by",v:"Store Manager — Site, CBE"},
+    ],
+    motion:[
+      "GRN form appears — fields auto-fill against PO data with a sequential type-in",
+      "Quantity field: progress bar fills from 0 to 700/700 — green at exact match",
+      "Quality status card flips (flip-card CSS animation) from 'Pending' to 'Passed'",
+      "GRN document saved — snap-to-folder animation, filed alongside PO",
+    ],
+    tags:["auto-fill vs PO","quantity progress bar","flip-card quality","snap-to-folder"],
+    vo:"Upon delivery, the Goods Receipt Note is generated and reconciled against the purchase order instantly.",
+  },
+  {
+    num:"14", phase:"BILLING", title:"Three-Way Matching",
+    timing:"2:08 – 2:18", secs:10,
+    camera:"Three document cards fan out on screen simultaneously. Match visualization connects them.",
+    screenTitle:"3-way match — po / grn / invoice",
+    rows:[
+      {l:"PO Value",v:"₹3,25,500"},
+      {l:"GRN Quantity",v:"700 units"},
+      {l:"Invoice amount",v:"₹3,25,500"},
+      {l:"Invoice quantity",v:"700 units"},
+      {l:"Match result",v:"All three matched ✓",c:"green"},
+      {l:"Payment status",v:"Cleared for release ✓",c:"green"},
+    ],
+    motion:[
+      "Three document cards fan out simultaneously from center — PO left, GRN center, Invoice right",
+      "AI draws green connecting lines between matching fields — animated stroke-dashoffset, 0.8s each",
+      "Each match line completes with a small green checkmark icon at the endpoint",
+      "Three checkmarks appear simultaneously — brief satisfaction pause",
+      "Final card slides in: 'Invoice approved. Payment cleared for release.'",
+    ],
+    tags:["three-card fan","match line draw","simultaneous checkmarks","payment cleared card"],
+    vo:"AI-powered three-way matching — PO, GRN, and invoice — reconciles automatically. No errors. No delays.",
+  },
+  {
+    num:"15", phase:"CLOSING", title:"Executive Dashboard — Closing",
+    timing:"2:18 – 2:30", secs:12,
+    camera:"Cinematic slow pull-back from a single PO card to reveal full executive dashboard. KPIs animate. Orchestral swell.",
+    screenTitle:"executive procurement dashboard",
+    rows:null,
+    kpis:[
+      {v:"₹29,18,300",l:"Total savings this quarter"},
+      {v:"4.2 days",l:"Avg. approval cycle"},
+      {v:"97%",l:"Vendor delivery accuracy"},
+      {v:"100%",l:"Invoice match rate"},
+    ],
+    motion:[
+      "Pull-back reveal: camera zooms out from a single PO card to the full dashboard — cinematic, 1.5s",
+      "KPI counters animate simultaneously from zero: ₹0 → ₹29,18,300 over 2s with ease-out",
+      "Vendor performance chart bars draw in from left to right",
+      "Approval cycle timeline compresses visually: '23 days' label shrinks to '4.2 days'",
+      "Final frame: full dashboard, all green metrics — hold 1.5s",
+      "Fade to black. IVA Procure logo fades in. Tagline fades in below. Hold 2s. Fade out.",
+    ],
+    tags:["pull-back reveal","simultaneous KPI counters","bar chart draw","cycle compression","logo fade"],
+    vo:"From a single purchase intent to a cleared invoice — IVA Procure handles the entire procurement lifecycle intelligently.",
+    caption:"From Intent to Payment. One Intelligent Procurement Platform.",
+    closing:true,
+  },
+];
+
+const TOTAL_SECS = SCENES.reduce((a,s)=>a+s.secs,0);
+
+// ── TIMELINE ──
+const tlColors = [
+  '#c0392b','#185fa5','#185fa5','#185fa5','#2e7dd4',
+  '#2e7dd4','#1a9e62','#1a9e62','#1a9e62','#1a9e62',
+  '#1a9e62','#1a9e62','#1a9e62','#1a9e62','#5ba4ff'
+];
+const tlSegs = document.getElementById('tlSegs');
+SCENES.forEach((sc,i)=>{
+  const seg = document.createElement('div');
+  seg.className = 'tl-seg';
+  seg.style.flex = sc.secs;
+  seg.style.background = tlColors[i];
+  seg.style.opacity = '0.7';
+  seg.title = `Scene ${sc.num}: ${sc.title} (${sc.timing})`;
+  seg.style.borderRight = '1px solid rgba(5,13,31,0.5)';
+  seg.onclick = () => scrollToScene(i);
+  seg.onmouseenter = () => seg.style.opacity = '1';
+  seg.onmouseleave = () => seg.style.opacity = '0.7';
+  tlSegs.appendChild(seg);
+});
+
+// ── NAV BUTTONS ──
+const nav = document.getElementById('sceneNav');
+SCENES.forEach((sc,i)=>{
+  const btn = document.createElement('button');
+  btn.className = 'scene-btn';
+  btn.id = 'navbtn-'+i;
+  btn.textContent = sc.num + ' ' + sc.phase;
+  btn.onclick = () => scrollToScene(i);
+  nav.appendChild(btn);
+});
+
+// ── RENDER SCENES ──
+const container = document.getElementById('scenesContainer');
+
+function mkIcon(path) {
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${path}</svg>`;
+}
+const icons = {
+  camera: '<polyline points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>',
+  motion: '<circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/>',
+  mic: '<path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/>',
+};
+
+SCENES.forEach((sc,i)=>{
+  const card = document.createElement('div');
+  card.className = 'scene-card';
+  card.id = 'scene-card-'+i;
+
+  // UI mock rows
+  let mockHtml = '';
+  if(sc.rows){
+    const rowsHtml = sc.rows.map(r=>`
+      <div class="ui-row">
+        <span class="ui-row-label">${r.l}</span>
+        <span class="ui-row-val${r.c?' '+r.c:''}">${r.v}</span>
+      </div>`).join('');
+    mockHtml = `<div class="ui-mock">
+      <div class="ui-mock-bar">
+        <div class="ui-mock-dot" style="background:#ff5f57"></div>
+        <div class="ui-mock-dot" style="background:#febc2e"></div>
+        <div class="ui-mock-dot" style="background:#28c840"></div>
+        <div class="ui-mock-title">IVA Procure — ${sc.screenTitle}</div>
+      </div>
+      <div class="ui-mock-rows">${rowsHtml}</div>
+    </div>`;
+  }
+
+  // KPIs
+  let kpiHtml = '';
+  if(sc.kpis){
+    kpiHtml = `<div class="kpi-grid">${sc.kpis.map(k=>`
+      <div class="kpi-card">
+        <div class="kpi-val">${k.v}</div>
+        <div class="kpi-label">${k.l}</div>
+      </div>`).join('')}</div>`;
+  }
+
+  // Closing
+  let closingHtml = '';
+  if(sc.closing){
+    closingHtml = `<div class="closing-box">
+      <div class="closing-quote">"From Intent to Payment.<br>One Intelligent Procurement Platform."</div>
+      <div class="closing-logo">IVA Procure</div>
+      <div class="closing-tagline">Procurement. Powered by Intelligence.</div>
+    </div>`;
+  }
+
+  // VO
+  const voText = sc.vo || '';
+  const captionHtml = sc.caption ? `<div class="vo-caption">"${sc.caption}"</div>` : '';
+
+  // Motion list
+  const motionHtml = sc.motion.map(m=>`
+    <li class="motion-item">
+      <span class="motion-arrow">▶</span>
+      <span>${m}</span>
+    </li>`).join('');
+
+  const tagsHtml = (sc.tags||[]).map(t=>`<span class="mtag">${t}</span>`).join('');
+
+  card.innerHTML = `
+    <div class="scene-header" onclick="toggleScene(${i})">
+      <span class="scene-badge">Scene ${sc.num}</span>
+      <span class="scene-phase">${sc.phase}</span>
+      <span class="scene-title-text">${sc.title}</span>
+      <span class="scene-timing">${sc.timing}</span>
+      <span class="scene-chevron${i<3?' open':''}" id="chev-${i}">▾</span>
+    </div>
+    <div class="scene-body${i<3?' open':''}" id="body-${i}">
+      <div class="scene-grid">
+        <div class="sg-col">
+          <div class="sg-label">${mkIcon(icons.camera)} Camera &amp; Screen</div>
+          <div class="sg-text">${sc.camera}</div>
+          ${mockHtml}${kpiHtml}${closingHtml}
+        </div>
+        <div class="sg-col">
+          <div class="sg-label">${mkIcon(icons.motion)} Motion &amp; Transitions</div>
+          <ul class="motion-list">${motionHtml}</ul>
+          <div class="motion-tags">${tagsHtml}</div>
+        </div>
+        <div class="sg-col" style="border-right:none">
+          <div class="sg-label">${mkIcon(icons.mic)} Voiceover Script</div>
+          <div class="vo-text" style="font-style:italic;font-size:14px;line-height:1.75;color:rgba(255,255,255,0.8)">${voText}</div>
+          ${captionHtml}
+        </div>
+      </div>
+    </div>`;
+
+  container.appendChild(card);
+});
+
+function toggleScene(i){
+  const body = document.getElementById('body-'+i);
+  const chev = document.getElementById('chev-'+i);
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open',!isOpen);
+  chev.classList.toggle('open',!isOpen);
+}
+
+function scrollToScene(i){
+  const el = document.getElementById('scene-card-'+i);
+  if(!el) return;
+  document.querySelectorAll('.scene-card').forEach(c=>c.classList.remove('active'));
+  document.querySelectorAll('.scene-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('navbtn-'+i)?.classList.add('active');
+  // open it
+  const body = document.getElementById('body-'+i);
+  const chev = document.getElementById('chev-'+i);
+  body.classList.add('open');
+  chev.classList.add('open');
+  el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// Mark first 3 nav buttons active state visually
+document.getElementById('navbtn-0')?.classList.add('active');
+
+// Observe scenes for nav highlight
+const obs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const id = e.target.id;
+      const idx = parseInt(id.replace('scene-card-',''));
+      document.querySelectorAll('.scene-btn').forEach(b=>b.classList.remove('active'));
+      document.getElementById('navbtn-'+idx)?.classList.add('active');
+    }
+  });
+},{threshold:0.3});
+SCENES.forEach((_,i)=>{
+  const el = document.getElementById('scene-card-'+i);
+  if(el) obs.observe(el);
+});
+</script>
+</body>
+</html>

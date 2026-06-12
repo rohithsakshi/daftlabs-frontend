@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>IVA Procure — Auto Demo Video</title>
+<style>
+:root{
+  --bg:#f6f8fb;--card:#fff;--border:#e5eaf1;--ink:#0f172a;--muted:#64748b;
+  --green:#16a34a;--green2:#22c55e;--navy:#101827;--soft:#ecfdf5;--blue:#2563eb;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,Arial,sans-serif;background:linear-gradient(180deg,#f8fafc,#eef4fb);color:var(--ink);overflow:hidden}
+.video{width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;padding:28px}
+.stage{width:min(1280px,96vw);height:min(720px,88vh);background:var(--card);border:1px solid var(--border);border-radius:28px;box-shadow:0 28px 80px rgba(15,23,42,.14);position:relative;overflow:hidden}
+.top{height:76px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 34px;background:#fff}
+.logo{font-weight:900;font-size:22px}.logo span{color:var(--green)}
+.meta{font-size:13px;color:var(--muted)}
+.progress{position:absolute;left:0;top:76px;height:4px;background:var(--green);width:0%;z-index:20}
+.scene{position:absolute;inset:80px 0 0 0;padding:34px;opacity:0;transform:translateX(40px) scale(.985);transition:opacity .7s ease,transform .7s ease;pointer-events:none}
+.scene.active{opacity:1;transform:translateX(0) scale(1);pointer-events:auto}
+.grid{display:grid;grid-template-columns:260px 1fr;gap:28px;height:100%}
+.sidebar{border-right:1px solid var(--border);padding-right:24px}
+.navitem{display:flex;gap:12px;align-items:center;padding:14px 16px;margin-bottom:8px;border-radius:14px;color:#475569;font-weight:700;font-size:14px}
+.navitem.active{background:#eafaf0;color:var(--green);border-left:4px solid var(--green)}
+.health{position:absolute;left:34px;bottom:34px;width:210px;background:#fff;border:1px solid var(--border);border-radius:18px;padding:18px}
+.health b{color:var(--green)}
+.main{min-width:0}
+.eyebrow{color:var(--green);font-size:13px;font-weight:900;letter-spacing:.16em;text-transform:uppercase;margin-bottom:10px}
+h1{font-size:38px;line-height:1.08;margin-bottom:14px;letter-spacing:-.04em}
+.sub{color:var(--muted);font-size:18px;line-height:1.55;max-width:720px}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:26px}
+.card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:20px;box-shadow:0 10px 28px rgba(15,23,42,.05)}
+.card .label{font-size:12px;color:var(--muted);font-weight:800;text-transform:uppercase}
+.card .value{font-size:28px;font-weight:900;margin-top:8px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--green);color:white;padding:15px 26px;border-radius:14px;font-weight:900;border:0;box-shadow:0 12px 28px rgba(22,163,74,.25)}
+.btn.dark{background:var(--navy)}
+.table{margin-top:22px;border:1px solid var(--border);border-radius:18px;overflow:hidden;background:#fff}
+.row{display:grid;grid-template-columns:1.2fr .8fr .7fr .7fr .7fr;gap:12px;padding:15px 18px;border-bottom:1px solid var(--border);align-items:center;font-size:14px}
+.row.head{background:#f1fdf5;color:#334155;font-size:12px;font-weight:900;text-transform:uppercase}
+.row:last-child{border-bottom:0}
+.good{color:var(--green);font-weight:900}.pill{display:inline-flex;padding:5px 10px;border-radius:999px;background:#dcfce7;color:var(--green);font-weight:900;font-size:12px}
+.split{display:grid;grid-template-columns:1.4fr .9fr;gap:22px}
+.panel{background:#fff;border:1px solid var(--border);border-radius:22px;padding:24px;box-shadow:0 12px 35px rgba(15,23,42,.06)}
+.mockmail{background:#f8fafc;border:1px solid var(--border);border-radius:18px;padding:22px;margin-top:22px}
+.line{height:12px;background:#e2e8f0;border-radius:999px;margin:12px 0}
+.line.short{width:65%}.line.green{background:#bbf7d0}
+.check{width:58px;height:58px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;color:#fff;font-size:32px;font-weight:900;margin:20px auto}
+.cursor{position:absolute;width:28px;height:28px;z-index:30;opacity:0;filter:drop-shadow(0 6px 8px rgba(0,0,0,.25))}
+.cursor.show{opacity:1;animation:clicker 2.4s ease-in-out infinite}
+@keyframes clicker{0%{transform:translate(-20px,-10px)}45%{transform:translate(20px,14px)}55%{transform:translate(20px,14px) scale(.86)}100%{transform:translate(-20px,-10px)}}
+.float{animation:float 3s ease-in-out infinite}@keyframes float{50%{transform:translateY(-8px)}}
+.scan{position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(34,197,94,.14),transparent);transform:translateX(-100%);animation:scan 2.2s ease-in-out infinite}@keyframes scan{to{transform:translateX(100%)}}
+.caption{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);background:rgba(15,23,42,.92);color:#fff;padding:12px 22px;border-radius:999px;font-weight:800;font-size:15px;z-index:25;box-shadow:0 10px 24px rgba(0,0,0,.2);max-width:80%;text-align:center}
+.controls{position:absolute;right:28px;bottom:22px;display:flex;gap:10px;z-index:40}
+.ctrl{border:1px solid var(--border);background:#fff;border-radius:12px;padding:10px 14px;font-weight:900}
+.badge{display:inline-block;background:#eafaf0;color:var(--green);padding:7px 12px;border-radius:999px;font-size:12px;font-weight:900}
+.scene-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.big{font-size:54px}.center{text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%}
+.fadein{animation:fadeup .8s ease both}@keyframes fadeup{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+<div class="video">
+  <div class="stage">
+    <div class="top">
+      <div class="logo">IVA <span>Procure</span></div>
+      <div class="meta">Auto demo video · fictional sample data only</div>
+    </div>
+    <div class="progress" id="progress"></div>
+    <svg class="cursor" id="cursor" viewBox="0 0 24 24"><path fill="#0f172a" stroke="#fff" stroke-width="1.5" d="M4 2l16 10-7 2 4 7-3 1-4-7-5 5z"/></svg>
+
+    <section class="scene active" data-caption="Procurement shouldn't take weeks.">
+      <div class="center">
+        <div class="eyebrow">AI-Powered Procurement</div>
+        <h1 class="big">From Intent to Payment.<br><span style="color:var(--green)">One Intelligent Platform.</span></h1>
+        <p class="sub">Watch IVA Procure automate RFQs, vendor quotations, AI comparison, approvals, PO generation, delivery tracking, GRN, and billing.</p>
+        <button class="btn dark" style="margin-top:32px">Start Workflow Demo</button>
+      </div>
+    </section>
+
+    <section class="scene" data-caption="A purchase intent arrives from operations.">
+      <div class="grid">
+        <div class="sidebar">
+          <div class="navitem active">▦ Dashboard</div><div class="navitem">▤ Intent Requests</div><div class="navitem">⚡ RFQ Management</div><div class="navitem">✓ Approvals</div><div class="navitem">□ GRN Review</div>
+          <div class="health">Live Insight<br><b>Site Health 98%</b></div>
+        </div>
+        <div class="main">
+          <div class="eyebrow">Purchase Team Dashboard</div><h1>New Intent Request</h1>
+          <div class="panel">
+            <div class="scene-title"><h2>PR-DEMO-2026-1042</h2><span class="pill">Pending RFQ</span></div>
+            <div class="cards">
+              <div class="card"><div class="label">Material</div><div class="value">RMC</div></div>
+              <div class="card"><div class="label">Quantity</div><div class="value">1,500</div></div>
+              <div class="card"><div class="label">Priority</div><div class="value">High</div></div>
+              <div class="card"><div class="label">Required By</div><div class="value">7d</div></div>
+            </div>
+            <button class="btn dark" style="margin-top:26px">Create RFQ</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="scene" data-caption="IVA maps materials and discovers matching vendors.">
+      <div class="scene-title"><div><div class="eyebrow">RFQ Creation Assistant</div><h1>Create RFQ from Intent</h1></div><span class="badge">AI mapped</span></div>
+      <div class="split">
+        <div class="panel"><h2>Intent Materials Review</h2><div class="table">
+          <div class="row head"><div>Material</div><div>Qty</div><div>Category</div><div>Status</div><div></div></div>
+          <div class="row"><div>Ready-Mix Concrete</div><div>1,500 units</div><div>Construction</div><div class="good">Mapped</div><div>✓</div></div>
+        </div></div>
+        <div class="panel"><h2>Suggested Vendors</h2><div class="line green"></div><div class="line green short"></div><div class="line"></div><button class="btn" style="margin-top:18px">AI Vendor Discovery</button></div>
+      </div>
+    </section>
+
+    <section class="scene" data-caption="RFQs are dispatched to vendors in one click.">
+      <div class="center">
+        <div class="panel" style="width:760px;text-align:left">
+          <div class="scene-title"><h1>Ready for Dispatch</h1><span class="pill">6 vendors selected</span></div>
+          <p class="sub">Each supplier receives a secure quotation link with item details, taxes, delivery expectations, and submission instructions.</p>
+          <button class="btn" style="margin-top:26px">Dispatch RFQ Now ✈</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="scene" data-caption="Vendors submit quotations through a secure portal or by email.">
+      <div class="split">
+        <div class="panel"><h1>Vendor Email</h1><div class="mockmail"><b>RFQ Invitation — RFQ-DEMO-1042</b><div class="line"></div><div class="line short"></div><button class="btn dark" style="margin-top:18px">Open Secure Portal</button></div></div>
+        <div class="panel"><h1>Quotation Portal</h1><div class="table">
+          <div class="row"><div>Unit Price</div><div class="good">₹2,450</div><div>GST</div><div>18%</div><div></div></div>
+          <div class="row"><div>Delivery</div><div>5 days</div><div>Credit</div><div>30 days</div><div></div></div>
+        </div><button class="btn" style="margin-top:20px">Submit Quotation</button></div>
+      </div>
+    </section>
+
+    <section class="scene" data-caption="AI reads incoming vendor emails and extracts structured quote data.">
+      <div class="panel" style="height:100%;position:relative;overflow:hidden">
+        <div class="scan"></div>
+        <div class="scene-title"><h1>AI Quote Ingestion</h1><span class="badge">Auto extracted</span></div>
+        <div class="cards">
+          <div class="card float"><div class="label">Email</div><div class="value">PDF</div><p class="sub" style="font-size:14px">Vendor quote received</p></div>
+          <div class="card float"><div class="label">AI Extracts</div><div class="value">Price</div><p class="sub" style="font-size:14px">Taxes, delivery, credit</p></div>
+          <div class="card float"><div class="label">Structured</div><div class="value">Quote</div><p class="sub" style="font-size:14px">Ready for comparison</p></div>
+          <div class="card float"><div class="label">Accuracy</div><div class="value good">97%</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="scene" data-caption="Every quotation is ranked and compared automatically.">
+      <div class="scene-title"><div><div class="eyebrow">Procurement Decision Center</div><h1>Vendor Comparison</h1></div><button class="btn dark">Requote / Add Vendors</button></div>
+      <div class="table">
+        <div class="row head"><div>Vendor</div><div>Quote Value</div><div>Lead Time</div><div>Credit</div><div>Score</div></div>
+        <div class="row"><div><span class="pill">Best Match</span> NorthStar Supply</div><div class="good">₹36.8L</div><div>5 days</div><div>30 days</div><div class="good">94%</div></div>
+        <div class="row"><div>Atlas Industrial</div><div>₹38.1L</div><div>7 days</div><div>15 days</div><div>87%</div></div>
+        <div class="row"><div>PrimeBuild Materials</div><div>₹39.4L</div><div>10 days</div><div>45 days</div><div>82%</div></div>
+      </div>
+    </section>
+
+    <section class="scene" data-caption="IVA scans nearby market suppliers for better opportunities.">
+      <div class="scene-title"><div><div class="eyebrow">Market Intelligence</div><h1>Bangalore Supplier Scan</h1></div><button class="btn dark">Compare with Existing Quotes</button></div>
+      <div class="cards" style="grid-template-columns:repeat(3,1fr)">
+        <div class="card"><h2>MetroBuild Traders</h2><p class="sub">Bangalore</p><div class="value good">₹35.9L–₹36.5L</div><span class="pill">High confidence</span></div>
+        <div class="card"><h2>Urban Cement Co.</h2><p class="sub">Bangalore</p><div class="value good">₹36.2L–₹37.1L</div><span class="pill">High confidence</span></div>
+        <div class="card"><h2>RapidMix Supply</h2><p class="sub">Bangalore</p><div class="value">₹37.0L–₹38.0L</div><span class="pill">Medium confidence</span></div>
+      </div>
+    </section>
+
+    <section class="scene" data-caption="AI recommends the best sourcing strategy with savings evidence.">
+      <div class="split">
+        <div class="panel"><h1>Existing Quotes</h1><div class="table"><div class="row"><div>NorthStar</div><div class="good">₹36.8L</div><div>5d</div><div>30d</div><div>94%</div></div><div class="row"><div>Atlas</div><div>₹38.1L</div><div>7d</div><div>15d</div><div>87%</div></div></div></div>
+        <div class="panel"><h1>AI Recommendation</h1><div class="check">✓</div><h2>Request MetroBuild Traders</h2><p class="sub">Estimated floor is lower than current best quote. Potential additional savings: <b class="good">₹90,000</b>.</p><button class="btn" style="margin-top:20px">Request RFQ</button></div>
+      </div>
+    </section>
+
+    <section class="scene" data-caption="Managers approve with complete evidence, not guesswork.">
+      <div class="center"><div class="panel" style="width:780px"><div class="check">✓</div><h1>Approval Workflow</h1><p class="sub">Recommendation, quote comparison, supplier reliability, and market benchmark are sent for approval.</p><button class="btn" style="margin-top:24px">Approved</button></div></div>
+    </section>
+
+    <section class="scene" data-caption="Approved sourcing decisions become purchase orders automatically.">
+      <div class="panel"><div class="scene-title"><h1>Purchase Order Generated</h1><span class="pill">Issued</span></div>
+        <div class="cards"><div class="card"><div class="label">PO Number</div><div class="value">PO-2026-1042</div></div><div class="card"><div class="label">Vendor</div><div class="value" style="font-size:24px">NorthStar</div></div><div class="card"><div class="label">Value</div><div class="value good">₹36.8L</div></div><div class="card"><div class="label">Delivery</div><div class="value">5 days</div></div></div>
+      </div>
+    </section>
+
+    <section class="scene" data-caption="Delivery milestones are tracked until materials arrive.">
+      <div class="panel"><h1>Delivery Tracking</h1><div class="table"><div class="row"><div>PO Issued</div><div class="good">Complete</div><div>Vendor Confirmed</div><div class="good">Complete</div><div>✓</div></div><div class="row"><div>Dispatched</div><div class="good">In Transit</div><div>ETA</div><div>2 days</div><div>🚚</div></div></div></div>
+    </section>
+
+    <section class="scene" data-caption="GRN is created and matched against the PO.">
+      <div class="center"><div class="panel" style="width:720px"><div class="check">✓</div><h1>Goods Receipt Note Created</h1><p class="sub">Quantity received: 1,500 / 1,500 units. Quality check passed. GRN matched to PO.</p></div></div>
+    </section>
+
+    <section class="scene" data-caption="PO, GRN, and invoice are matched before billing.">
+      <div class="cards" style="grid-template-columns:repeat(3,1fr);margin-top:80px">
+        <div class="card"><h1>PO</h1><div class="value good">✓</div><p class="sub">Value matched</p></div>
+        <div class="card"><h1>GRN</h1><div class="value good">✓</div><p class="sub">Quantity matched</p></div>
+        <div class="card"><h1>Invoice</h1><div class="value good">✓</div><p class="sub">Ready for Finance</p></div>
+      </div>
+    </section>
+
+    <section class="scene" data-caption="IVA Procure gives complete control from intent to payment.">
+      <div class="center">
+        <div class="eyebrow">Executive Dashboard</div><h1 class="big">Procurement, Powered by Intelligence.</h1>
+        <div class="cards"><div class="card"><div class="label">Savings</div><div class="value good">₹18.7M</div></div><div class="card"><div class="label">Response Time</div><div class="value good">-42%</div></div><div class="card"><div class="label">Approval Speed</div><div class="value good">3×</div></div><div class="card"><div class="label">Visibility</div><div class="value good">100%</div></div></div>
+      </div>
+    </section>
+
+    <div class="caption" id="caption"></div>
+    <div class="controls"><button class="ctrl" id="play">Pause</button><button class="ctrl" id="restart">Restart</button></div>
+  </div>
+</div>
+<script>
+const scenes=[...document.querySelectorAll('.scene')], progress=document.getElementById('progress'), caption=document.getElementById('caption'), cursor=document.getElementById('cursor');
+let i=0, playing=true, timer=null, dur=5200, started=Date.now();
+function show(n){
+  scenes.forEach(s=>s.classList.remove('active')); i=n%scenes.length; scenes[i].classList.add('active');
+  caption.textContent=scenes[i].dataset.caption||''; started=Date.now();
+  cursor.classList.add('show'); cursor.style.left=(60+Math.random()*30)+'%'; cursor.style.top=(58+Math.random()*20)+'%';
+}
+function tick(){
+  if(!playing)return;
+  const pct=((i)+(Date.now()-started)/dur)/scenes.length*100; progress.style.width=Math.min(100,pct)+'%';
+  if(Date.now()-started>=dur){show(i+1)}
+  requestAnimationFrame(tick);
+}
+document.getElementById('play').onclick=()=>{playing=!playing;play.textContent=playing?'Pause':'Play'; if(playing){started=Date.now();tick()}};
+document.getElementById('restart').onclick=()=>{show(0); progress.style.width='0%'; if(!playing){playing=true;play.textContent='Pause';tick()}};
+show(0); tick();
+</script>
+</body>
+</html>

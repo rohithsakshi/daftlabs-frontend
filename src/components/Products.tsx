@@ -300,7 +300,7 @@ export default function Products() {
           ></div>
           
           {/* Modal Panel */}
-          <div className="relative bg-[#081220] border border-blue-500/30 rounded-2xl shadow-[0_0_50px_-12px_rgba(59,130,246,0.3)] w-full max-w-5xl overflow-hidden flex flex-col z-10 max-h-[90vh]">
+          <div className="relative bg-[#081220] border border-blue-500/30 rounded-2xl shadow-[0_0_50px_-12px_rgba(59,130,246,0.3)] w-[90vw] h-[85vh] max-w-[1400px] overflow-hidden flex flex-col z-10">
             {/* Header */}
             <div className="px-6 py-4 border-b border-[rgba(255,255,255,0.08)] flex justify-between items-center bg-[#0B1727]">
               <div>
@@ -323,13 +323,15 @@ export default function Products() {
             </div>
             
             {/* Iframe Container */}
-            <div className="relative w-full aspect-video bg-[#081220]">
+            <div className="relative flex-grow bg-white">
               <iframe
-                src="/iva_procure_demo.html"
-                className="absolute inset-0 w-full h-full border-0"
-                allowFullScreen
-                title="IVA Procure Workflow Walkthrough"
+                src="/IVA_Procure_Auto_Demo_Video.html"
+                className="w-full h-full rounded-xl border-0"
+                title="IVA Procure Auto Demo Video"
               />
+              <div className="absolute inset-0 pointer-events-none -z-10 flex items-center justify-center text-gray-400">
+                Unable to load demo video.
+              </div>
             </div>
             
             {/* Footer / Notice */}
