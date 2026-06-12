@@ -4,59 +4,9 @@ import React, { useRef, useState, useEffect } from "react";
 import { motion, useInView, useScroll, useTransform } from "framer-motion";
 import { useSpring, animated } from "@react-spring/web";
 import * as Tabs from "@radix-ui/react-tabs";
-import { BarChart3, Package, Users, Truck, FileText, Settings, Workflow, Cloud, Shield } from "lucide-react";
+import { Package, Cloud, Shield } from "lucide-react";
 
 // --- Components ---
-
-const CardSpotlight = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => {
-  const divRef = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [opacity, setOpacity] = useState(0);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!divRef.current) return;
-    const rect = divRef.current.getBoundingClientRect();
-    setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
-  };
-
-  return (
-    <div
-      ref={divRef}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={() => setOpacity(1)}
-      onMouseLeave={() => setOpacity(0)}
-      className={`relative overflow-hidden ${className}`}
-    >
-      <div
-        className="pointer-events-none absolute -inset-px transition duration-300 z-0"
-        style={{
-          opacity,
-          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(59,130,246,.12), transparent 40%)`,
-        }}
-      />
-      <div className="relative z-10 h-full flex flex-col">
-        {children}
-      </div>
-    </div>
-  );
-};
-
-const AnimatedList = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => {
-  return (
-    <div className={className}>
-      {React.Children.map(children, (child, index) => (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-50px" }}
-          transition={{ duration: 0.5, delay: index * 0.1 }}
-        >
-          {child}
-        </motion.div>
-      ))}
-    </div>
-  );
-};
 
 const StatCounter = ({ end, label }: { end: number; label: string }) => {
   const ref = useRef(null);
@@ -80,18 +30,6 @@ const StatCounter = ({ end, label }: { end: number; label: string }) => {
   );
 };
 
-// --- Data ---
-
-const features = [
-  { icon: <BarChart3 size={16} />, label: "Financial Management", desc: "Accounts, payroll, tax, and audit — automated end to end." },
-  { icon: <Package size={16} />, label: "Inventory & Warehouse", desc: "Real-time stock tracking, reordering triggers, and multi-location support." },
-  { icon: <Users size={16} />, label: "HR & Attendance", desc: "Employee lifecycle, leave management, and attendance integration." },
-  { icon: <Truck size={16} />, label: "Supply Chain & Procurement", desc: "Vendor management, PO workflows, and delivery tracking in one place." },
-  { icon: <FileText size={16} />, label: "Sales & CRM", desc: "Lead pipelines, quotations, invoicing, and customer history." },
-  { icon: <Settings size={16} />, label: "Production & Manufacturing", desc: "Work orders, BOM management, and quality control workflows." },
-  { icon: <Workflow size={16} />, label: "Custom Workflow Builder", desc: "Drag-and-drop process automation tailored to your operations." },
-  { icon: <BarChart3 size={16} />, label: "Analytics & Reporting", desc: "Live dashboards and scheduled reports across every module." },
-];
 
 export default function Products() {
   const containerRef = useRef(null);
@@ -177,95 +115,134 @@ export default function Products() {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12 items-start">
+        <div className="grid lg:grid-cols-[1fr_1fr] gap-12 items-start mt-24">
           {/* Left: Product Info */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
-            <div className="inline-flex items-center gap-2 bg-[var(--accent-subtle)] border border-[var(--border-accent)] rounded-full px-4 py-1.5 mb-6">
-              <span className="text-xs font-semibold text-[var(--accent)] tracking-wide">DAFT ERP</span>
+            <div className="inline-flex items-center gap-2 border border-blue-900/50 rounded-full px-5 py-2 mb-8">
+              <span className="text-xs font-semibold text-blue-500 tracking-wide uppercase">DAFT ERP</span>
             </div>
 
             <h3
-              className="text-3xl font-bold mb-6 leading-snug text-[var(--text-primary)]"
+              className="text-4xl md:text-5xl font-bold mb-8 leading-[1.2] text-white"
               style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             >
-              Business Intelligence,
+              Business
               <br />
-              Built Into Your Workflow
+              Intelligence,
+              <br />
+              Built Into Your
+              <br />
+              Workflow
             </h3>
             
-            <p className="text-[var(--text-secondary)] text-sm leading-relaxed mb-8">
-              Every module is connected, every report is live, and every workflow can be
-              customized. From the factory floor to the finance
-              team, DAFT ERP gives every stakeholder exactly what they need.
-            </p>
+            <div className="text-[#94A3B8] text-lg leading-relaxed mb-10 space-y-4 max-w-md">
+              <p>
+                Every module is connected, every report is live, and every workflow can be customized.
+              </p>
+              <p>
+                From the factory floor to the finance team, DAFT ERP gives every stakeholder exactly what they need.
+              </p>
+            </div>
 
             {/* Radix Tabs */}
-            <Tabs.Root defaultValue="modular" className="w-full">
-              <Tabs.List className="flex flex-wrap gap-2 md:gap-4 border-b border-[var(--border)] mb-5 pb-0">
-                <Tabs.Trigger value="modular" className="text-sm font-medium px-1 py-2 border-b-2 border-transparent data-[state=active]:border-[var(--accent)] text-[var(--text-muted)] data-[state=active]:text-[var(--accent)] transition-all">
+            <Tabs.Root defaultValue="modular" className="w-full max-w-md">
+              <Tabs.List className="flex gap-3 mb-8">
+                <Tabs.Trigger value="modular" className="flex-1 text-sm font-medium px-4 py-4 rounded-xl border border-gray-800 bg-[#0B1221] text-white data-[state=active]:bg-[#0f172a] data-[state=active]:border-gray-700 transition-all text-center">
                   Modular
                 </Tabs.Trigger>
-                <Tabs.Trigger value="cloud" className="text-sm font-medium px-1 py-2 border-b-2 border-transparent data-[state=active]:border-[var(--accent)] text-[var(--text-muted)] data-[state=active]:text-[var(--accent)] transition-all">
-                  Cloud-Native
+                <Tabs.Trigger value="cloud" className="flex-1 text-sm font-medium px-4 py-4 rounded-xl border border-gray-800 bg-[#0B1221] text-white data-[state=active]:bg-[#0f172a] data-[state=active]:border-gray-700 transition-all text-center">
+                  Cloud-<br/>Native
                 </Tabs.Trigger>
-                <Tabs.Trigger value="roles" className="text-sm font-medium px-1 py-2 border-b-2 border-transparent data-[state=active]:border-[var(--accent)] text-[var(--text-muted)] data-[state=active]:text-[var(--accent)] transition-all">
+                <Tabs.Trigger value="roles" className="flex-1 text-sm font-medium px-4 py-4 rounded-xl border border-gray-800 bg-[#0B1221] text-white data-[state=active]:bg-[#0f172a] data-[state=active]:border-gray-700 transition-all text-center flex items-center justify-center">
                   Security
                 </Tabs.Trigger>
               </Tabs.List>
               
-              <Tabs.Content value="modular" className="text-sm text-[var(--text-secondary)] leading-relaxed min-h-[60px]">
-                <div className="flex gap-3 items-start">
-                  <Package className="text-[var(--accent)] shrink-0 mt-0.5" size={18} />
-                  <p>Adopt one module or all eight. Seamlessly expand functionality as your operational needs evolve.</p>
+              <Tabs.Content value="modular" className="text-base text-[#94A3B8] leading-relaxed min-h-[60px]">
+                <div className="flex gap-5 items-start">
+                  <div className="p-3 bg-[#0B1221] border border-gray-800 rounded-xl shrink-0">
+                    <Package className="text-blue-500" size={20} />
+                  </div>
+                  <p className="mt-1">Adopt one module or all eight.<br/>Seamlessly expand functionality as your operational needs evolve.</p>
                 </div>
               </Tabs.Content>
-              <Tabs.Content value="cloud" className="text-sm text-[var(--text-secondary)] leading-relaxed min-h-[60px]">
-                <div className="flex gap-3 items-start">
-                  <Cloud className="text-[var(--accent)] shrink-0 mt-0.5" size={18} />
-                  <p>Reliable cloud-native infrastructure ensures global availability with robust offline capabilities.</p>
+              <Tabs.Content value="cloud" className="text-base text-[#94A3B8] leading-relaxed min-h-[60px]">
+                <div className="flex gap-5 items-start">
+                  <div className="p-3 bg-[#0B1221] border border-gray-800 rounded-xl shrink-0">
+                    <Cloud className="text-blue-500" size={20} />
+                  </div>
+                  <p className="mt-1">Reliable cloud-native infrastructure ensures global availability with robust offline capabilities.</p>
                 </div>
               </Tabs.Content>
-              <Tabs.Content value="roles" className="text-sm text-[var(--text-secondary)] leading-relaxed min-h-[60px]">
-                <div className="flex gap-3 items-start">
-                  <Shield className="text-[var(--accent)] shrink-0 mt-0.5" size={18} />
-                  <p>Enterprise-grade role-based access control combined with detailed audit logs for compliance.</p>
+              <Tabs.Content value="roles" className="text-base text-[#94A3B8] leading-relaxed min-h-[60px]">
+                <div className="flex gap-5 items-start">
+                  <div className="p-3 bg-[#0B1221] border border-gray-800 rounded-xl shrink-0">
+                    <Shield className="text-blue-500" size={20} />
+                  </div>
+                  <p className="mt-1">Enterprise-grade role-based access control combined with detailed audit logs for compliance.</p>
                 </div>
               </Tabs.Content>
             </Tabs.Root>
 
             <a
               href="#contact"
-              className="mt-8 btn-primary px-7 py-3.5 text-sm w-fit inline-block"
+              className="mt-12 px-6 py-3 rounded-xl border border-gray-800 bg-[#0B1221] hover:bg-[#0f172a] text-white font-bold text-base w-fit inline-block transition-colors"
               style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
             >
               Request a Demo
             </a>
           </motion.div>
 
-          {/* Right: Feature Grid with AnimatedList and CardSpotlight */}
-          <AnimatedList className="grid grid-cols-1 sm:grid-cols-2 gap-3 relative z-10">
-            {features.map((f, i) => (
-              <CardSpotlight
-                key={f.label}
-                className="bg-[var(--surface-primary)] border border-[var(--border)] rounded-xl p-4 h-full"
-              >
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-[var(--accent)]">{f.icon}</span>
-                  <span
-                    className="text-xs font-semibold text-[var(--text-primary)]"
-                    style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-                  >
-                    {f.label}
-                  </span>
-                </div>
-                <p className="text-[var(--text-muted)] text-xs leading-relaxed">{f.desc}</p>
-              </CardSpotlight>
-            ))}
-          </AnimatedList>
+          {/* Right: Feature Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="bg-[#0f1522] border border-gray-800/60 rounded-3xl p-8 lg:p-10 relative overflow-hidden flex flex-col w-full max-w-lg mx-auto"
+          >
+            <div className="flex items-start gap-5 mb-8">
+               <div className="p-4 bg-[#142038] border border-blue-900/30 rounded-xl shrink-0">
+                 <Package className="text-blue-500" size={24} />
+               </div>
+               <div>
+                 <h4 className="text-2xl font-bold text-white mb-1" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>DAFT ERP Platform</h4>
+                 <p className="text-[#64748B] text-sm">Everything included, out of the box</p>
+               </div>
+            </div>
+
+            <div className="h-px w-full bg-gray-800/60 mb-8" />
+
+            <div className="space-y-6 flex-1 mb-8">
+               {[
+                 "Real-time dashboards across every module",
+                 "Role-based access & full audit trails",
+                 "API-first, cloud-native architecture",
+                 "Dedicated onboarding & live support",
+                 "Custom workflow builder — no code needed",
+                 "Go live in as little as 4 weeks"
+               ].map((text, i) => (
+                 <div key={i} className="flex items-start gap-4">
+                   <div className="mt-0.5 w-6 h-6 rounded-full bg-[#142038] border border-blue-900/30 flex items-center justify-center shrink-0">
+                     <div className="w-2 h-2 rounded-sm bg-blue-500" />
+                   </div>
+                   <p className="text-[#94A3B8] text-base leading-snug">{text}</p>
+                 </div>
+               ))}
+            </div>
+
+            <div className="h-px w-full bg-gray-800/60 mb-6" />
+
+            <div className="flex items-center justify-between">
+              <p className="text-[#64748B] text-sm">8 modules · 1 platform</p>
+              <div className="px-4 py-1.5 rounded-full bg-[#142038] border border-blue-900/30">
+                 <span className="text-blue-400 text-sm font-semibold">Enterprise Ready</span>
+              </div>
+            </div>
+          </motion.div>
         </div>
 
         {/* New Product Card: IVA Procure */}

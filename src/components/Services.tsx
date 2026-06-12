@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import { useState, useRef, useEffect } from "react";
+import { motion, useInView, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
 import {
-  Bot, Cloud, Building2, Rocket, Code2, Lightbulb,
+  Bot, Building2, Rocket,
   TestTube2, Headphones, X, CheckCircle2, ChevronRight
 } from "lucide-react";
 
@@ -30,19 +30,6 @@ const services: BentoItem[] = [
     ],
   },
   {
-    icon: <Cloud size={22} />,
-    title: "Cloud & DevOps",
-    short: "Infrastructure that scales with your ambition — not against it.",
-    detail:
-      "We architect, migrate, and manage cloud environments on AWS, Azure, and GCP. Our DevOps practice brings CI/CD maturity, container orchestration, and infrastructure-as-code to teams that need to ship faster without sacrificing stability.",
-    bullets: [
-      "Multi-cloud architecture & migration",
-      "Kubernetes & container orchestration",
-      "CI/CD pipeline design & automation",
-      "Infrastructure as Code (Terraform, Pulumi)",
-    ],
-  },
-  {
     icon: <Building2 size={22} />,
     title: "Enterprise Solutions",
     short: "Complex systems, built for organizations that can't afford downtime.",
@@ -66,32 +53,6 @@ const services: BentoItem[] = [
       "Design sprints & product discovery",
       "Full-stack web & mobile engineering",
       "Iterative shipping with user feedback loops",
-    ],
-  },
-  {
-    icon: <Code2 size={22} />,
-    title: "Custom Software Development",
-    short: "Bespoke software, precision-engineered for your exact use case.",
-    detail:
-      "When off-the-shelf doesn't cut it, we build exactly what you need. Our engineers work across the full stack to deliver tailor-made applications with clean architecture, test coverage, and documentation that doesn't become a liability.",
-    bullets: [
-      "Full-stack web application development",
-      "API design & backend systems",
-      "Mobile app development (iOS & Android)",
-      "Clean architecture, code reviews & documentation",
-    ],
-  },
-  {
-    icon: <Lightbulb size={22} />,
-    title: "IT Consulting",
-    short: "Strategic technology guidance from people who've built at scale.",
-    detail:
-      "Technology decisions made today compound for years. Our consultants bring battle-tested experience in system design, digital transformation, and vendor selection to help you make smart, informed choices — before committing resources.",
-    bullets: [
-      "Technology stack assessment & selection",
-      "Digital transformation roadmapping",
-      "Architecture review & risk analysis",
-      "CTO-as-a-service for growing teams",
     ],
   },
   {
@@ -127,6 +88,22 @@ export default function Services() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
+  const [isHoveringCard, setIsHoveringCard] = useState(false);
+  const cursorX = useMotionValue(-100);
+  const cursorY = useMotionValue(-100);
+  const springConfig = { damping: 25, stiffness: 300, mass: 0.5 };
+  const cursorXSpring = useSpring(cursorX, springConfig);
+  const cursorYSpring = useSpring(cursorY, springConfig);
+
+  useEffect(() => {
+    const moveCursor = (e: MouseEvent) => {
+      cursorX.set(e.clientX + 16);
+      cursorY.set(e.clientY + 16);
+    };
+    window.addEventListener("mousemove", moveCursor);
+    return () => window.removeEventListener("mousemove", moveCursor);
+  }, [cursorX, cursorY]);
+
   return (
     <section id="services" className="relative py-28 overflow-hidden bg-[#081220]">
       {/* Background Ambience */}
@@ -153,44 +130,68 @@ export default function Services() {
           </p>
         </motion.div>
 
-        {/* Service Grid */}
+        {/* Service Carousel */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+          className="relative w-full overflow-hidden py-4 group/carousel"
+          style={{ maskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)" }}
         >
-          {services.map((service, index) => (
-            <div
-              key={index}
-              onClick={() => setSelected(service)}
-              className="relative group bg-[#111827] border border-[rgba(255,255,255,0.08)] rounded-2xl p-6 flex flex-col cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:border-[rgba(59,130,246,0.45)] hover:shadow-[0_0_30px_rgba(59,130,246,0.15)] min-h-[260px] w-full"
-            >
-              <div className="flex justify-between items-start mb-4">
-                <div className="w-10 h-10 rounded-xl bg-[rgba(37,99,235,0.1)] border border-[rgba(37,99,235,0.2)] flex items-center justify-center text-[#3B82F6] group-hover:shadow-[0_0_15px_rgba(37,99,235,0.4)] group-hover:text-blue-400 transition-all duration-300">
-                  {service.icon}
+          <div className="flex gap-6 w-max animate-carousel group-hover/carousel:[animation-play-state:paused]">
+            {[...services, ...services].map((service, index) => (
+              <div
+                key={index}
+                onClick={() => setSelected(service)}
+                onMouseEnter={() => setIsHoveringCard(true)}
+                onMouseLeave={() => setIsHoveringCard(false)}
+                className="relative group bg-[#111827] border border-[rgba(255,255,255,0.08)] rounded-2xl p-6 flex flex-col cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:border-[rgba(59,130,246,0.45)] hover:shadow-[0_0_30px_rgba(59,130,246,0.15)] min-h-[260px] w-[300px] sm:w-[340px] shrink-0"
+              >
+                <div className="flex justify-between items-start mb-4">
+                  <div className="w-10 h-10 rounded-xl bg-[rgba(37,99,235,0.1)] border border-[rgba(37,99,235,0.2)] flex items-center justify-center text-[#3B82F6] group-hover:shadow-[0_0_15px_rgba(37,99,235,0.4)] group-hover:text-blue-400 transition-all duration-300">
+                    {service.icon}
+                  </div>
+                  <div className="px-3 py-1 rounded-full bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)] text-[10px] font-medium text-[#94A3B8] tracking-wide uppercase">
+                    Service
+                  </div>
                 </div>
-                <div className="px-3 py-1 rounded-full bg-[rgba(255,255,255,0.03)] border border-[rgba(255,255,255,0.05)] text-[10px] font-medium text-[#94A3B8] tracking-wide uppercase">
-                  Service
+                
+                <h3 className="text-lg font-bold text-[#F8FAFC] mb-3 leading-tight" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
+                  {service.title}
+                </h3>
+                
+                <p className="text-[13px] text-[#94A3B8] leading-relaxed flex-grow">
+                  {service.short}
+                </p>
+                
+                <div className="mt-5 pt-4 border-t border-[rgba(255,255,255,0.08)] flex items-center text-[13px] font-semibold text-[#3B82F6] transition-colors duration-300 group-hover:text-blue-400">
+                  View Details 
+                  <ChevronRight size={14} className="ml-1 transition-transform duration-300 group-hover:translate-x-1" />
                 </div>
               </div>
-              
-              <h3 className="text-lg font-bold text-[#F8FAFC] mb-3 leading-tight" style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}>
-                {service.title}
-              </h3>
-              
-              <p className="text-[13px] text-[#94A3B8] leading-relaxed flex-grow">
-                {service.short}
-              </p>
-              
-              <div className="mt-5 pt-4 border-t border-[rgba(255,255,255,0.08)] flex items-center text-[13px] font-semibold text-[#3B82F6] transition-colors duration-300 group-hover:text-blue-400">
-                View Details 
-                <ChevronRight size={14} className="ml-1 transition-transform duration-300 group-hover:translate-x-1" />
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </motion.div>
       </div>
+
+      {/* Custom Cursor Tooltip */}
+      <AnimatePresence>
+        {isHoveringCard && !selected && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.15 }}
+            className="fixed top-0 left-0 pointer-events-none z-[120] px-3 py-1.5 rounded-full bg-blue-600/90 backdrop-blur-sm text-white text-[11px] font-semibold tracking-wide uppercase shadow-lg shadow-blue-500/20 flex items-center whitespace-nowrap border border-blue-400/20"
+            style={{
+              x: cursorXSpring,
+              y: cursorYSpring,
+            }}
+          >
+            Click to expand
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Side Panel / Drawer */}
       <AnimatePresence>

@@ -146,3 +146,16 @@ body {
   background: rgba(37, 99, 235, 0.3);
   color: #ffffff;
 }
+
+@keyframes carousel {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(calc(-50% - 12px));
+  }
+}
+
+.animate-carousel {
+  animation: carousel 30s linear infinite;
+}
